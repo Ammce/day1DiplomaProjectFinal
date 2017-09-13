@@ -32,9 +32,8 @@
                             <a href="/buy-product/<%= item._id %>" class="btn btn-success">Buy item</a>
                             <a href="/edit-product/<%= item._id %>" class="btn btn-primary">Edit Item</a>
                             
-                            <form action="/delete-product/<%= item._id %>" method="post">
-                              <input type="submit" value="Submit" class="btn btn-danger">
-                            </form>          
+                            <a href="/delete-product/<%= item._id %>?_method=DELETE" class="btn btn-danger">Delete item</a>
+                            
                         </div>
                         
                         </div>
