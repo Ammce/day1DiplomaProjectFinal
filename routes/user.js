@@ -1,16 +1,8 @@
 var router = require('express').Router();
 var Product = require('../models/products');
+var passport = require('passport');
 
 
-
-router.get('/profile/:name', function(req, res, next){
-    if(req.params.name){
-    res.render('users', {user: req.params.name});
-        }
-    else{
-        res.render('users', {user: 'Not existing user'});
-    }
-});
 
 
 //Find all products and send them to the front end
@@ -45,7 +37,52 @@ router.get('/buy-product/:product_id', function(req, res, next){
 });
 
 
+//LogIn and Singup routes will be bellow
 
+router.get('/login', function(req, res, next){
+    if(req.user){
+        res.redirect('/profile');
+    } 
+    else{
+        res.render('login.ejs', { message: req.flash('loginMessage') });
+    }
+});
+
+router.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/login', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));
+
+
+
+router.get('/signup', function(req, res, next){
+    res.render('signup.ejs', {message: req.flash('signupMessage')});
+});
+
+router.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/signup', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));
+
+
+router.get('/profile', isLoggedIn, function(req, res, next){
+    res.render('profile.ejs', {
+        user: req.user
+    });
+});
+
+router.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
+function isLoggedIn(req, res, next){
+    if (req.isAuthenticated())
+        return next();
+    res.redirect('/signup');
+}
 
 
 

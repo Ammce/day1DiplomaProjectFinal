@@ -4,6 +4,10 @@ var morgan = require('morgan');
 var ejs = require('ejs');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var flash = require('connect-flash');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 
 //Running the express
@@ -30,6 +34,12 @@ app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
+app.use(cookieParser());
+
+app.use(session({secret: 'iwannabetheverybestlikenooneeverwas'}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 
 
@@ -42,7 +52,7 @@ app.set('view engine', 'ejs');
 var mainRoutes = require('./routes/main');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
-
+require('./config/passport')(passport); 
 
 //Use routes
 app.use(mainRoutes);
