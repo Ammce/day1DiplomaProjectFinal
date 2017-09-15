@@ -14,7 +14,13 @@ router.get('/products', function(req, res, next){
             return next(err);
         }
         else{
-          res.render('products', {items: result});  
+            if(req.user){
+                res.render('products', {items: result});
+            }
+            else{
+                res.redirect('/signup');
+            }
+            
         }
     });
       
@@ -43,6 +49,9 @@ router.get('/login', function(req, res, next){
     if(req.user){
         res.redirect('/profile');
     } 
+    else if(req.facebook){
+        res.redirect('/profile');
+    }
     else{
         res.render('login.ejs', { message: req.flash('loginMessage') });
     }
@@ -57,7 +66,17 @@ router.post('/login', passport.authenticate('local-login', {
 
 
 router.get('/signup', function(req, res, next){
-    res.render('signup.ejs', {message: req.flash('signupMessage')});
+    
+    if(req.user){
+        res.redirect('/profile');
+    } 
+    else if(req.facebook){
+        res.redirect('/profile');
+    }
+    else{
+        res.render('signup.ejs', {message: req.flash('signupMessage')});
+    }
+    
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
@@ -67,9 +86,22 @@ router.post('/signup', passport.authenticate('local-signup', {
     }));
 
 
+//FACEBOOK ROUTES //
+//              // 
+
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: [ 'email' ] }));
+
+	// handle the callback after facebook has authenticated the user
+	router.get('/auth/facebook/callback',
+		passport.authenticate('facebook', {
+			successRedirect : '/profile',
+			failureRedirect : '/'
+		}));
+
+
 router.get('/profile', isLoggedIn, function(req, res, next){
     res.render('profile.ejs', {
-        user: req.user
+        user: req.user || req.facebook
     });
 });
 

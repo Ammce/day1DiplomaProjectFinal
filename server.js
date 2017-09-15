@@ -41,6 +41,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+//Teach express to use local variables everywhere for example in nav bar
+app.use(function(req, res, next){
+    res.locals.user = req.user;
+    next();
+});
 
 
 //View Engine

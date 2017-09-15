@@ -27,16 +27,33 @@
                 <h3><span class="fa fa-user"></span> Local</h3>
 
                     <p>
-                        <strong>Welcome</strong>: <%= user.name %><br>
+                        <strong>Welcome</strong>: <%= user.local.name %><br>
                         <strong>id</strong>: <%= user._id %><br>
                         <strong>email</strong>: <%= user.local.email %><br>
                         <strong>password</strong>: <%= user.local.password %> <br>
-                        <strong>Address</strong>: <%= user.address %>
+                        <strong>Address</strong>: <%= user.local.address %>
                     </p>
 
             </div>
         </div>
+        
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
 
+                    <p>
+                        <strong>id</strong>: <%= user.facebook.id %><br>
+                        <strong>token</strong>: <%= user.facebook.token %><br>
+                        <strong>email</strong>: <%= user.facebook.email %><br>
+                        <strong>name</strong>: <%= user.facebook.name %>
+                        
+                    </p>
+                    <img class="img-fluid rounded" src="<%= user.facebook.picture %>" alt="">
+                        
+
+            </div>
+        </div>
+        
     </div>
 
 </div>
