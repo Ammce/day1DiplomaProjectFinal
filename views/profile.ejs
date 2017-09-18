@@ -16,7 +16,7 @@
 
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        
     </div>
 
     <div class="row">
@@ -24,15 +24,17 @@
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
+                <h3><span class="fa fa-user"></span> My profile</h3>
 
                     <p>
-                        <strong>Welcome</strong>: <%= user.name %><br>
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
+                        <strong>Welcome</strong>: <%= user.local.name %><%= user.facebook.name %><br>
+                        <strong>id</strong>: <%= user._id %><%= user.facebook.id %><br>
+                        <strong>email</strong>: <%= user.local.email %> <%= user.facebook.email %><br>
                         <strong>password</strong>: <%= user.local.password %> <br>
-                        <strong>Address</strong>: <%= user.address %>
+                        <strong>Address</strong>: <%= user.local.address %> <br>
+                        <strong>token</strong>: <%= user.facebook.token %>
                     </p>
+                 <img class="img-circle img-responsive img-center" src="<%= user.facebook.picture %>" alt="">
 
             </div>
         </div>

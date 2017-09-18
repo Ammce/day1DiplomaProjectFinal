@@ -6,6 +6,7 @@ var ProductSchema = new Schema({
     description: String,
     price: Number,
     category: String,
+    image: String
     
 });
 

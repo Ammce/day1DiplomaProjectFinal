@@ -12,15 +12,35 @@
               <a class="nav-item nav-link" href="/add-product">Add Item</a>
              
         </div>
+          
+          <% if (!user) { %>
         <div class="navbar-nav">
             <form class="form-inline pull-xs-right ">
             <a class="nav-item nav-link" href="/login">Login</a>
                <a class="nav-item nav-link" href="#">/</a>
               <a class="nav-item nav-link" href="/signup">Register</a>
+                <a class="nav-item nav-link" href="#">/</a>
+              <a href="/auth/facebook" class="nav-item nav-link"><span class="fa fa-facebook"></span> Facebook</a>
                 
                 
                 
             </form>
         </div>
+          
+          <% } else { %>
+                  <div class="navbar-nav">
+            <form class="form-inline pull-xs-right ">
+            <a class="nav-item nav-link" href="/profile"><%= user.local.name || user.facebook.name %> </a>
+               <a class="nav-item nav-link" href="#">/</a>
+              <a class="nav-item nav-link" href="/logout">Logout</a>
+                
+                
+                
+            </form>
+        </div>
+          
+          
+          
+          <% } %>
       </div>    
 </nav>

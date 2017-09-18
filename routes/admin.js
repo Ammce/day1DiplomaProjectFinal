@@ -29,6 +29,7 @@ router.post('/add-product', function(req, res, next){
     product.description = req.body.description;
     product.price = req.body.price;
     product.category = req.body.category;
+    product.image = req.body.image;
     
     product.save(function(err, product){
         if(err){
@@ -39,6 +40,60 @@ router.post('/add-product', function(req, res, next){
         }
     });
 });
+
+router.get('/products/specify', function(req, res, next){
+    
+ var options = {
+     price: req.query.price,
+     category: req.query.category
+ };
+    
+    
+    
+    if(options.price !== '' && options.category !== undefined){
+         Product.find({$and:[{'price': req.query.price}, {'category': req.query.category}]}, function(err, product){
+     if(err){ return next(err);
+            }
+        else{
+            
+        res.render('specify', {items: product});
+            next();
+        }
+        
+    }); 
+    }
+    else if(options.price !== '' || options.category !== undefined){
+         Product.find({$or:[{'price': req.query.price}, {'category': req.query.category}]}, function(err, product){
+     if(err){ return next(err);
+            }
+        else{
+            
+        res.render('specify', {items: product});
+            next();
+        }
+        
+    }); 
+    }
+    
+    else{
+         Product.find({}, function(err, product){
+     if(err){ return next(err);
+            }
+        else{
+            
+        res.render('specify', {items: product});
+            next();
+        }
+        
+    }); 
+    }
+    
+    
+    
+  
+});
+    
+
 
 router.get('/edit-product/:product_id', function(req, res, next){
     Product.findOne({_id: req.params.product_id}, function(err, product){
