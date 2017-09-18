@@ -69,6 +69,7 @@ router.get('/products/specify', function(req, res, next){
         else{
             
         res.render('specify', {items: product});
+        
             next();
         }
         

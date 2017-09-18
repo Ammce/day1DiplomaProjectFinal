@@ -63,6 +63,7 @@
                 <h1>Here are the products you have just addedS</h1>
               </div>          
                 <% items.forEach(function(item){ %>   
+                    <% if(item){ %>
                     <div class="col-xs-12 col-md-3">
                         <div class="card">
                             <img class="card-img-top product-pics" src="<%= item.image %>" alt="Card image cap">
@@ -84,6 +85,13 @@
                         
                         </div>
                     </div>
+                        
+                    <% return true; } %>
+            
+                    <% if(item === undefined) { %>
+                    <h1>The item you are looking for is not found...</h1>
+                    
+                    <% } %>
                 <% }) %>   
 
         </div>
