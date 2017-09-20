@@ -9,6 +9,7 @@ var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var cors = require('cors');
+var MongoStore = require('connect-mongo')(session);
 
 //Running the express
 var app = express();
@@ -33,10 +34,15 @@ mongoose.connect(Secret.database, function(err){
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({ extended: false}));
 app.use(cookieParser());
-
-app.use(session({secret: 'iwannabetheverybestlikenooneeverwas', resave: true, saveUninitialized: true}));
+app.use(session({
+    secret: 'iwannabetheverybestlikenooneeverwas',
+    resave: true, 
+    saveUninitialized: false,
+    store: new MongoStore({  mongooseConnection: mongoose.connection}),
+    cookie: { maxAge: 60 * 60 * 1000} //Time of session expiration
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -45,6 +51,7 @@ app.use(cors());
 //Teach express to use local variables everywhere for example in nav bar
 app.use(function(req, res, next){
     res.locals.user = req.user;
+    res.locals.session = req.session;
     next();
 });
 
@@ -66,7 +73,7 @@ app.use(userRoutes);
 app.use(adminRoutes);
 
 
-//404 Page
+//404
 app.get('*', function(req, res, next){
 
   res.render('404');

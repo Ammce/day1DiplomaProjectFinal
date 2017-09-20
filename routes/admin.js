@@ -83,6 +83,28 @@ router.get('/admin', cors(corsOptions), findUsers, findAdmins, findProducts, ren
 
 
 
+//Find all products and send them to the front end
+
+router.get('/products', function(req, res, next){
+    
+    Product.find({}, function(err, result){
+        if(err){
+            return next(err);
+        }
+        else{
+            if(req.user){
+                res.render('products', {items: result});
+            }
+            else{
+                res.redirect('/signup');
+            }
+            
+        }
+    });
+      
+});
+
+
 router.get('/add-product', cors(corsOptions), function(req, res, next){
  
     if(req.user){
@@ -161,7 +183,13 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
 
 
 router.get('/edit-product/:product_id',cors(corsOptions), function(req, res, next){
-    Product.findOne({_id: req.params.product_id}, function(err, product){
+
+    
+    
+    
+     if(req.user){
+        if(req.user.local.isAdmin){
+              Product.findOne({_id: req.params.product_id}, function(err, product){
         if(err){
             return next(err);
         }
@@ -169,10 +197,24 @@ router.get('/edit-product/:product_id',cors(corsOptions), function(req, res, nex
             res.render('edit-product', {item: product});
         }
     });
+            
+        }
+        else {
+            res.redirect("/buy-product/" + req.params.product_id)
+        }
+    }
+    else{
+        res.redirect('/login');
+    }
 });
 
 router.post('/edit-product/:product_id',cors(corsOptions), function(req, res, next){
-    Product.findOne({_id: req.params.product_id}, function(err, product){
+ 
+
+
+if(req.user){
+        if(req.user.local.isAdmin){
+            Product.findOne({_id: req.params.product_id}, function(err, product){
         if(err){
             return next(err);
         }
@@ -194,24 +236,44 @@ router.post('/edit-product/:product_id',cors(corsOptions), function(req, res, ne
         });
         }
     });
+            
+        }
+        else {
+            res.redirect("/profile")
+        }
+    }
+    else{
+        res.redirect('/login');
+    }
+
 });
-
-
-
 
 
 router.delete('/delete-product/:product_id',cors(corsOptions), function(req, res, next){
     
-    Product.findOneAndRemove({_id: req.params.product_id}, function(err, deleted){
+    if(req.user){
+        if(req.user.local.isAdmin){
+            Product.findOneAndRemove({_id: req.params.product_id}, function(err, deleted){
      
-        if(err){
-            return next(err);
+                if(err){
+                    return next(err);
+                }
+                else{
+                    res.redirect('/products');
+                }
+
+            });
+            
         }
-        else{
-            res.redirect('/products');
+        else {
+            res.redirect("/profile")
         }
-        
-    });
+    }
+    else{
+        res.redirect('/login');
+    }
+    
+  
     
 });
 

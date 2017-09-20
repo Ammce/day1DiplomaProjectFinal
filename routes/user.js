@@ -11,26 +11,6 @@ var corsOptions = {
 }
 
 
-//Find all products and send them to the front end
-
-router.get('/products', function(req, res, next){
-    
-    Product.find({}, function(err, result){
-        if(err){
-            return next(err);
-        }
-        else{
-            if(req.user){
-                res.render('products', {items: result});
-            }
-            else{
-                res.redirect('/signup');
-            }
-            
-        }
-    });
-      
-});
 
 router.get('/searchtext', function(req, res, next){
     Product.find(
