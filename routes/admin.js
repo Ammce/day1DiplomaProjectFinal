@@ -1,5 +1,12 @@
 var router = require('express').Router();
+var User = require('../models/user');
 var Product = require('../models/products');
+var cors = require('cors');
+var corsOptions = {
+    origin: "http://localhost:3000",
+    optionSuccessStatus: 200
+    
+}
 
 
 router.use( function( req, res, next ) {
@@ -18,11 +25,81 @@ router.use( function( req, res, next ) {
 });
 
 
-router.get('/add-product', function(req, res, next){
-    res.render('add-product');
+function findAdmins(req, res, next){
+    User.find({'local.isAdmin': true}, function(err, admirs){
+        if(err){
+            return next(err);
+        }
+        else{
+            req.admins = admirs;
+            next();
+        }
+    });
+}
+
+function findUsers(req, res, next){
+            User.find({}, function(err, users){
+                if(err){
+                    return next(err);
+                }
+                else{
+                    req.users = users; 
+                    next();
+                }
+            });
+}
+
+function findProducts(req, res, next){
+    Product.find({}, function(err, product){
+        if(err){
+            return next(err);
+        }
+        else{
+            req.products = product;
+            next();
+        }
+    });
+}
+
+
+function renderAdminPage(req, res){
+    
+    
+     if(req.user){
+        if(req.user.local.isAdmin){
+          res.render('admin', {users: req.users, products: req.products, admins: req.admins});
+            
+        }
+        else {
+            res.redirect("/profile")
+        }
+    }
+    else{
+        res.redirect('/login');
+    }
+}
+
+router.get('/admin', cors(corsOptions), findUsers, findAdmins, findProducts, renderAdminPage);
+
+
+
+router.get('/add-product', cors(corsOptions), function(req, res, next){
+ 
+    if(req.user){
+        if(req.user.local.isAdmin){
+            res.render('add-product');
+        }
+        else {
+            res.redirect('/');
+        }
+    }
+    else{
+        res.redirect('/');
+    }
+ 
 });
 
-router.post('/add-product', function(req, res, next){
+router.post('/add-product' ,cors(corsOptions), function(req, res, next){
     var product = new Product();
     
     product.name = req.body.name;
@@ -41,62 +118,49 @@ router.post('/add-product', function(req, res, next){
     });
 });
 
-router.get('/products/specify', function(req, res, next){
+router.get('/products/specify',cors(corsOptions), function(req, res, next){
     
  var options = {
      price: req.query.price,
      category: req.query.category
  };
-    
-    
-    
+
     if(options.price !== '' && options.category !== undefined){
          Product.find({$and:[{'price': req.query.price}, {'category': req.query.category}]}, function(err, product){
      if(err){ return next(err);
             }
-        else{
-            
+        else{    
         res.render('specify', {items: product});
             next();
-        }
-        
+        } 
     }); 
     }
     else if(options.price !== '' || options.category !== undefined){
          Product.find({$or:[{'price': req.query.price}, {'category': req.query.category}]}, function(err, product){
      if(err){ return next(err);
             }
-        else{
-            
-        res.render('specify', {items: product});
-        
+        else{    
+        res.render('specify', {items: product}); 
             next();
-        }
-        
+        }   
     }); 
     }
-    
     else{
          Product.find({}, function(err, product){
      if(err){ return next(err);
             }
-        else{
-            
+        else{     
         res.render('specify', {items: product});
             next();
-        }
-        
+        }    
     }); 
     }
-    
-    
-    
-  
 });
-    
+  
 
 
-router.get('/edit-product/:product_id', function(req, res, next){
+
+router.get('/edit-product/:product_id',cors(corsOptions), function(req, res, next){
     Product.findOne({_id: req.params.product_id}, function(err, product){
         if(err){
             return next(err);
@@ -107,7 +171,7 @@ router.get('/edit-product/:product_id', function(req, res, next){
     });
 });
 
-router.post('/edit-product/:product_id', function(req, res, next){
+router.post('/edit-product/:product_id',cors(corsOptions), function(req, res, next){
     Product.findOne({_id: req.params.product_id}, function(err, product){
         if(err){
             return next(err);
@@ -136,7 +200,7 @@ router.post('/edit-product/:product_id', function(req, res, next){
 
 
 
-router.delete('/delete-product/:product_id', function(req, res, next){
+router.delete('/delete-product/:product_id',cors(corsOptions), function(req, res, next){
     
     Product.findOneAndRemove({_id: req.params.product_id}, function(err, deleted){
      

@@ -10,4 +10,6 @@ var ProductSchema = new Schema({
     
 });
 
+ProductSchema.index({'$**': 'text'});
+
 module.exports = mongoose.model('Product', ProductSchema);

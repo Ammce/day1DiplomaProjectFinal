@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/custom.css">
+
+<title>Buy Tonight</title>
+</head>
+<body>
+ 
+ <% include partials/navbar.ejs %>
+    
+    <div class="container wrapper">
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <h3>List of the users</h3>
+                
+                <ol>
+                    <% for(var i=0; i<users.length; i++){ %>
+                    
+                        <li>Username: <%= users[i].local.name || users[i].facebook.name%> <hr></li>
+                    <% } %>
+                </ol>
+                
+            </div> 
+            
+            <div class="col-xs-12 col-md-4">
+                <h3>List of admins</h3>
+                
+                <ol>
+                    <% for(var i=0; i<admins.length; i++){ %>
+                    
+                        <li>Username: <%= admins[i].local.name || admins[i].facebook.name%> <hr></li>
+                    <% } %>
+                </ol>
+                
+            </div> 
+            
+            <div class="col-xs-12 col-md-4">
+                <h3>List of the Products</h3>
+                
+                <ol>
+                    <% for(var i=0; i<products.length; i++){ %>
+                    
+                        <li>Product: <%= products[i].name %> <hr> </li>
+                    <% } %>
+                </ol>
+                
+            </div>  
+        </div>
+    </div>
+
+
+    
+    
+ <% include partials/footer.ejs %>     
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script src="/js/custom.js"></script>
+
+</body>
+
+</html>

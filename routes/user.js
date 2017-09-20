@@ -1,8 +1,14 @@
 var router = require('express').Router();
 var Product = require('../models/products');
 var passport = require('passport');
+var cors = require('cors');
 
 
+var corsOptions = {
+    origin: "http://localhost:3000",
+    optionSuccessStatus: 200
+    
+}
 
 
 //Find all products and send them to the front end
@@ -26,9 +32,27 @@ router.get('/products', function(req, res, next){
       
 });
 
+router.get('/searchtext', function(req, res, next){
+    Product.find(
+      {$text: {$search: req.query.searchterm}
+  }, function(err, found){
+      if(err){
+          return next(err);
+      }
+      else{
+          if(!found){
+              res.render('products', {items: 'Not found'});
+          }
+          else{
+              res.render('products', {items: found});
+          }
+      }
+  });
+});
+
 //Find one by id and send it back
 
-router.get('/buy-product/:product_id', function(req, res, next){
+router.get('/buy-product/:product_id', cors(corsOptions), function(req, res, next){
     Product.findOne({
         _id: req.params.product_id
     })

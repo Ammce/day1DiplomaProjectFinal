@@ -8,7 +8,9 @@ var userSchema = mongoose.Schema({
         password: String,
         name: String,
         address: String, 
-        picture: {type: String, default: ''}
+        picture: {type: String, default: ''},
+        isAdmin: {type: Boolean, default: false}
+        
     },
     
     facebook         : {

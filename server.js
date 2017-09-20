@@ -8,7 +8,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-
+var cors = require('cors');
 
 //Running the express
 var app = express();
@@ -40,6 +40,7 @@ app.use(session({secret: 'iwannabetheverybestlikenooneeverwas', resave: true, sa
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(cors());
 
 //Teach express to use local variables everywhere for example in nav bar
 app.use(function(req, res, next){
@@ -64,6 +65,13 @@ app.use(mainRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
 
+
+//404 Page
+app.get('*', function(req, res, next){
+
+  res.render('404');
+
+});
 
 //Running the server
 app.listen(Secret.port, function(err){
