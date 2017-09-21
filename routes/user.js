@@ -32,7 +32,7 @@ router.get('/searchtext', function(req, res, next){
 
 //Find one by id and send it back
 
-router.get('/buy-product/:product_id', cors(corsOptions), function(req, res, next){
+router.get('/view-product/:product_id', cors(corsOptions), function(req, res, next){
     Product.findOne({
         _id: req.params.product_id
     })
@@ -41,10 +41,12 @@ router.get('/buy-product/:product_id', cors(corsOptions), function(req, res, nex
                }
         else{
             console.log(product);
-            res.render('buy-product', {single: product});
+            res.render('view-product', {single: product});
         }
     });
 });
+
+
 
 
 //LogIn and Singup routes will be bellow

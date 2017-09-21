@@ -182,11 +182,9 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
 
 
 
+
 router.get('/edit-product/:product_id',cors(corsOptions), function(req, res, next){
 
-    
-    
-    
      if(req.user){
         if(req.user.local.isAdmin){
               Product.findOne({_id: req.params.product_id}, function(err, product){

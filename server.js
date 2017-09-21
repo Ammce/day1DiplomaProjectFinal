@@ -27,9 +27,6 @@ mongoose.connect(Secret.database, function(err){
     }
 });
 
-
-
-
 //Middlwere 
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
