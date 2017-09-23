@@ -11,17 +11,29 @@
  
  <% include partials/navbar.ejs %>
     
-    <div class="jumbotron">
-        <h1 class="display-3"> Name of product: <%= single.name %> </h1>
-        <p class="lead">Description: <%= single.description %></p>
-        <hr class="my-4">
-        <p style="color: red">Price: <%= single.price %></p>
-        <p>Category: <%= single.category %> </p>
-        <img src="<%= single.image %>"> 
-        <p class="lead">
-        <a class="btn btn-primary btn-lg" href="#" role="button">Buy Now</a>
-        </p>
-</div>
+    <div class="container wrapper">
+        <div class="row">
+           <div class="col-xs-12">
+            
+                <h1> Welcome admin, down you can edit his profile</h1>
+               
+               <form method="post">
+               
+                <input type="text" name="name" value="<%= user.local.name || user.facebook.name %>"> 
+                
+                <h4> Admin function</h4>
+                
+                <input type="radio" name="isAdmin" value="true"> Yes <br>
+                <input type="radio" name="isAdmin" value="false" checked> No<br>
+                   
+                   <button type="submit" class="btn btn-success">Update User</button>
+                </form>
+            
+            </div>
+        </div>
+    </div>
+
+
     
     
  <% include partials/footer.ejs %>     

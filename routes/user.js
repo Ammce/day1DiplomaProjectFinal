@@ -2,6 +2,7 @@ var router = require('express').Router();
 var Product = require('../models/products');
 var passport = require('passport');
 var cors = require('cors');
+var User = require('../models/user');
 
 
 var corsOptions = {
@@ -110,6 +111,11 @@ router.get('/profile', isLoggedIn, function(req, res, next){
         user: req.user || req.facebook
     });
 });
+
+
+
+
+
 
 router.get('/logout', function(req, res){
     req.logout();

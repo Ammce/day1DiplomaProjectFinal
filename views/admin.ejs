@@ -19,7 +19,7 @@
                 <ol>
                     <% for(var i=0; i<users.length; i++){ %>
                     
-                        <li>Username: <%= users[i].local.name || users[i].facebook.name%><hr></li> 
+                    <li>Username: <%= users[i].local.name || users[i].facebook.name%> <a href="/admin/<%= users[i]._id %>" class="btn btn-primary"> Edit User </a><a href="/delete-user/<%= users[i]._id %>?_method=DELETE" class="btn btn-danger">Delete user</a> </li> <hr>
                     <% } %>
                 </ol>
                 
@@ -43,7 +43,9 @@
                 <ol>
                     <% for(var i=0; i<products.length; i++){ %>
                     
-                        <li>Product: <%= products[i].name %> <hr> </li>
+                        <li>Product: <%= products[i].name %> 
+                            <a class="btn btn-success" href="/view-product/<%= products[i]._id %>"> View Product </a><hr>
+                    </li>
                     <% } %>
                 </ol>
                 

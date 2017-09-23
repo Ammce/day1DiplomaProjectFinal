@@ -10,6 +10,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var cors = require('cors');
 var MongoStore = require('connect-mongo')(session);
+var multer = require('multer');
+var upload = multer({dest: 'public/images/' });
 
 //Running the express
 var app = express();
@@ -45,6 +47,8 @@ app.use(passport.session());
 app.use(flash());
 app.use(cors());
 
+
+
 //Teach express to use local variables everywhere for example in nav bar
 app.use(function(req, res, next){
     res.locals.user = req.user;
@@ -69,6 +73,19 @@ app.use(mainRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
 
+
+//Testing uploads
+
+app.get('/upload', function(req, res, next){
+    res.render('upload');
+});
+
+app.post('/upload', upload.single('photo'), function(req, res, next){
+    console.log(req.file);
+    res.redirect('/upload');
+});
+
+//Testing
 
 //404
 app.get('*', function(req, res, next){

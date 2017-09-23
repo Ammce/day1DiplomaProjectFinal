@@ -153,7 +153,7 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
             }
         else{    
         res.render('specify', {items: product});
-            next();
+           
         } 
     }); 
     }
@@ -163,7 +163,7 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
             }
         else{    
         res.render('specify', {items: product}); 
-            next();
+           
         }   
     }); 
     }
@@ -173,9 +173,11 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
             }
         else{     
         res.render('specify', {items: product});
-            next();
+            
         }    
     }); 
+        
+
     }
 });
   
@@ -270,9 +272,72 @@ router.delete('/delete-product/:product_id',cors(corsOptions), function(req, res
     else{
         res.redirect('/login');
     }
+
+});
+
+router.delete('/delete-user/:user_id', cors(corsOptions), function(req, res, next){
     
-  
+    if(req.user){
+        if(req.user.local.isAdmin){
+            User.findOneAndRemove({_id: req.params.user_id}, function(err,deleted){
+                if(err){
+                    return next(err);
+                }
+                else{
+                    res.redirect('/admin');
+                }
+            });
+        }
+        else{
+            res.redirect('/profile');
+        }
+    }
+    else{
+        res.redirect('/login');
+    }
     
+});
+
+
+router.get('/admin/:profile_id', function(req, res, next){
+    
+    User.findOne({_id : req.params.profile_id}, function(err, user){
+        if(err){
+            return next(err);
+        }
+        else{
+            res.render('edit-profile', {user: user});
+        }
+    });
+    
+});
+
+router.post('/admin/:profile_id', function(req, res, next){
+    
+    User.findOne({_id: req.params.profile_id}, function(err, user){
+        
+        if(err){
+            return next(err);
+        }
+        else{
+            
+            user.set({
+                'local.name': req.body.name,
+                'local.isAdmin': req.body.isAdmin
+                
+            });
+            
+            user.save(function(err){
+                if(err){
+                    return next(err);
+                }
+                else{
+                    res.redirect('/admin');
+                }
+            });
+        }
+        
+    });
 });
 
 
