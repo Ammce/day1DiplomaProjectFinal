@@ -19,6 +19,7 @@
 
                     <div class="navbar-nav">
                         <form class="form-inline pull-xs-right ">
+                            <a href="/cart" class="fa fa-shopping-cart fa-lg" aria-hidden="true"><span class="badge"><%= cartQ.total %></span></a>
                             <a class="nav-item nav-link" href="/admin">AdminPanel</a>
                             <a class="nav-item nav-link" href="/profile"><%= user.local.name || user.facebook.name %> </a>
                            <a class="nav-item nav-link" href="/logout">Logout</a>
@@ -27,6 +28,7 @@
                 <%} else { %>
                     <div class="navbar-nav">
                         <form class="form-inline pull-xs-right ">
+                            <a href="/cart" class="fa fa-shopping-cart fa-lg" aria-hidden="true"><span class="badge"><%= cartQ.total %></span></a>
                             <a class="nav-item nav-link" href="/profile"><%= user.local.name || user.facebook.name %> </a>
                            <a class="nav-item nav-link" href="/logout">Logout</a>
                         </form>

@@ -7,3 +7,19 @@
     width: 100%;
     
 }
+
+.fa-shopping-cart , .badge{
+    color: rgba(255,255,255,.5);
+}
+
+
+a.fa-shopping-cart:hover{
+    color: #facbcb;
+    text-decoration: none;
+}
+
+
+
+
+
+

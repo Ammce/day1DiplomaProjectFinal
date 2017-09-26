@@ -12,10 +12,10 @@ var cors = require('cors');
 var MongoStore = require('connect-mongo')(session);
 var multer = require('multer');
 var upload = multer({dest: 'public/images/' });
+var cartFun = require('./custom/cartFun');
 
 //Running the express
 var app = express();
-
 
 
 //Connect to the database :)
@@ -46,7 +46,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(cors());
-
+app.use(cartFun);
 
 
 //Teach express to use local variables everywhere for example in nav bar

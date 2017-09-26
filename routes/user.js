@@ -3,13 +3,41 @@ var Product = require('../models/products');
 var passport = require('passport');
 var cors = require('cors');
 var User = require('../models/user');
-
+var Cart = require('../models/cart');
 
 var corsOptions = {
     origin: "http://localhost:3000",
     optionSuccessStatus: 200
     
 }
+
+
+router.get('/cart', function(req, res, next){
+     var total = 0;
+     var CartQ;
+     if(req.user){
+         
+           Cart.findOne({owner: req.user._id}, function(err, cart){  
+         if(err){
+             return next(err);
+         }
+         else{
+                cartQ = cart;      
+                 for(var i=0; i<cartQ.items.length; i++){
+                     total += cartQ.items[i].price * cartQ.items[i].quantity;
+                 }
+                res.render('cart', {cart: cartQ, total: total});     
+             }
+             
+             
+     });
+         
+     }
+   
+         else{
+                 res.redirect('/login');
+             }
+});
 
 
 

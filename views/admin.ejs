@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/custom.css">
 
 <title>Buy Tonight</title>
@@ -19,7 +20,7 @@
                 <ol>
                     <% for(var i=0; i<users.length; i++){ %>
                     
-                    <li>Username: <%= users[i].local.name || users[i].facebook.name%> <a href="/admin/<%= users[i]._id %>" class="btn btn-primary"> Edit User </a><a href="/delete-user/<%= users[i]._id %>?_method=DELETE" class="btn btn-danger">Delete user</a> </li> <hr>
+                    <li><%= users[i].local.name || users[i].facebook.name%> <a href="/admin/<%= users[i]._id %>" class="btn btn-primary"> Edit User </a><a href="/delete-user/<%= users[i]._id %>?_method=DELETE" class="btn btn-danger">Delete user</a> </li> <hr>
                     <% } %>
                 </ol>
                 
