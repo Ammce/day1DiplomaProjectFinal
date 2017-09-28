@@ -46,7 +46,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(cors());
-app.use(cartFun);
+
 
 
 //Teach express to use local variables everywhere for example in nav bar
@@ -72,7 +72,7 @@ require('./config/passport')(passport);
 app.use(mainRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
-
+app.use(cartFun);
 
 //Testing uploads
 
