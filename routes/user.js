@@ -12,28 +12,49 @@ var corsOptions = {
 }
 
 
+//This is the logic that doesn't work yet
+
+router.post('/view-product/:product_id', function(req, res, next){
+    
+    Cart.findOne({owner: req.user._id}, function(err, cart){
+    
+        cart.items.push({
+            item: req.body.product_id,
+            name: req.body.item,
+            quantity: req.body.quantity, 
+            price: req.body.price
+        });
+        
+        
+        cart.save(function(err){
+            if(err){
+                return next(err);
+            }
+            else{
+                res.redirect('/cart');
+            }
+        });
+    });  
+});
+
+
 router.get('/cart', function(req, res, next){
      var total = 0;
      var CartQ;
      if(req.user){
-         
            Cart.findOne({owner: req.user._id}, function(err, cart){  
-         if(err){
-             return next(err);
-         }
-         else{
-                cartQ = cart;      
+                if(err){
+                    return next(err);
+                    }
+                else{
+                
+                    cartQ = cart;      
                  for(var i=0; i<cartQ.items.length; i++){
                      total += cartQ.items[i].price * cartQ.items[i].quantity;
                  }
                 res.render('cart', {cart: cartQ, total: total});     
-             }
-             
-             
-     });
-         
-     }
-   
+                    }});
+          }
          else{
                  res.redirect('/login');
              }

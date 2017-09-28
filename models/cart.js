@@ -6,8 +6,10 @@ var CartSchema = new Schema({
     total: { type: Number, default: 0 },
     items: [{
         item: { type: Schema.Types.ObjectId, ref: 'Product' },
+        name: String,
         quantity: { type: Number, default: 1 },
         price: {type: Number, default: 0}
+        
     }]
     
 });
