@@ -19,11 +19,16 @@
                 
                 <% for(var i=0; i< cart.items.length; i++ ){ %>
                     <div>
+                        
+                    <h1>ID: <%= cart.items[i]._id %></h1>
                     <h3>Item: <%= cart.items[i].item %></h3>
                     <h3>Name: <%= cart.items[i].name %> </h3>
                     <h3>Price: <%= cart.items[i].price %></h3>
                     <h3>Quantity: <%= cart.items[i].quantity %></h3>
                     <hr>
+                    <a href="/remove/<%= cart.items[i].item %>?_method=DELETE" class="btn btn-danger">Delete item</a>
+                       
+                        
                     </div>
                 <% } %>
                 <h1>Total to pay: <%= total %>$</h1>

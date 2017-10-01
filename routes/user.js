@@ -11,7 +11,20 @@ var corsOptions = {
     
 }
 
-
+router.use( function( req, res, next ) {
+    // this middleware will call for each requested
+    // and we checked for the requested query properties
+    // if _method was existed
+    // then we know, clients need to call DELETE request instead
+    if ( req.query._method == 'DELETE' ) {
+        // change the original METHOD
+        // into DELETE method
+        req.method = 'DELETE';
+        // and set requested url to /user/12
+        req.url = req.path;
+    }       
+    next(); 
+});
 //This is the logic that doesn't work yet
 
 router.post('/view-product/:product_id', function(req, res, next){
@@ -50,7 +63,7 @@ router.get('/cart', function(req, res, next){
                 
                     cartQ = cart;      
                  for(var i=0; i<cartQ.items.length; i++){
-                     total += cartQ.items[i].price * cartQ.items[i].quantity;
+                     total += cartQ.items[i].price;
                  }
                 res.render('cart', {cart: cartQ, total: total});     
                     }});
@@ -58,6 +71,25 @@ router.get('/cart', function(req, res, next){
          else{
                  res.redirect('/login');
              }
+});
+
+
+router.delete('/remove/:cart_item', cors(corsOptions), function(req, res, next){
+
+    if(req.user){
+        Cart.findOneAndRemove({"items._id": req.params.cart_item}, function(err, deleted){
+            if(err){
+                return next(err);
+            }
+            else{
+                res.redirect('/cart');
+            }
+        });
+    }
+    else{
+        res.redirect('/login');
+    }
+    
 });
 
 

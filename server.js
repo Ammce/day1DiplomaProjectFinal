@@ -68,11 +68,14 @@ var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 require('./config/passport')(passport); 
 
+app.use(cartFun);
+
 //Use routes
 app.use(mainRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
-app.use(cartFun);
+
+
 
 //Testing uploads
 

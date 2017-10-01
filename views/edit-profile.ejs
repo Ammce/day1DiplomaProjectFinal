@@ -21,10 +21,15 @@
                
                 <input type="text" name="name" value="<%= user.local.name || user.facebook.name %>"> 
                 
-                <h4> Admin function</h4>
-                
-                <input type="radio" name="isAdmin" value="true"> Yes <br>
-                <input type="radio" name="isAdmin" value="false" checked> No<br>
+               <div class="form-group">
+                        <h3>Is Admin:</h3>
+                    <div class="btn-group" data-toggle="buttons">
+                         <label class="btn btn-primary ">
+                        <input type="radio" name="isAdmin" autocomplete="off"  value="true"> Yes </label>
+                        <label class="btn btn-primary active">
+                        <input type="radio" name="isAdmin"  autocomplete="off" value="false" checked> No</label>
+                    </div>
+                     </div>
                    
                    <button type="submit" class="btn btn-success">Update User</button>
                 </form>

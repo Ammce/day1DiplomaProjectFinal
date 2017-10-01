@@ -18,8 +18,196 @@ a.fa-shopping-cart:hover{
     text-decoration: none;
 }
 
+/* From here I will start with designing home page */
+html,body {
+	margin:0;
+	padding:0;
+	height:100%; /* needed for container min-height */
+
+}
+
+/* 1.0 Carousel and Slider */
+
+.page1{
+    width: 100%;
+    height: 75%;
+    background-color: #7cc3c0;
+   
+}
+
+.carousel-inner>.carousel-item>img, .carousel-inner>.item>a>img {
+display: block;
+height: auto;
+max-width: 100%;
+line-height: 1;
+width: 100%; 
+}
+
+.carousel-inner{
+    height:100%;
+}
+.carousel-item{
+    height: 100%;
+}
+.carousel,.item,.active{
+    height:100%;
+}
+
+.carousel-caption{
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    background-color: rgba(0,0,0,0.4);
+}
 
 
+/* Carousel and Slider */
 
+/* 2.0 Start buying now */
 
+.page2{
+    width: 100%;
+    height: 40%;
+    background-image: url(/images/background/1.png);
+     background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;
+    position: relative;
+}
 
+.i-can-center{
+    height: 100%;
+    text-align: center;
+    
+}
+
+.i-can-center:before{
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.center-me-please{
+    width: 50%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-amel {
+    color: #fff;
+    background-color: transparent;
+    border-color: #fff;
+    font-size: 300%;
+}
+
+.btn-amel:hover {
+    color: #2b90d9 ;
+    background-color: #fff;
+    border-color: #fff;
+    font-size: 300%;
+}
+
+/* End buying right now*/
+
+/* 3.0 Jumbotron With you + People */
+.aboutus-jumbotron {
+    position: relative;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    text-align: center;
+    background: url(/images/background/snowy.jpg) center center no-repeat;
+    background-size: cover;
+}
+
+.btn-white {
+    color: #fff;
+    background-color: transparent;
+    border-color: #fff;
+}
+section {
+    position: relative;
+    padding-top: 90px;
+    padding-bottom: 90px;
+}
+
+.btn-white:hover {
+    color: #2b90d9;
+    background-color: #eae8f8;
+    border-color: #fff;
+}
+
+/* End of Jumbotron With you + People */
+
+/* 4.0 How it works */
+.box {
+    background: #fff;
+    margin: 0 0 30px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 20px 0;
+    border-left: none;
+    border-right: none;
+}
+.icon {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 40px;
+    border: solid 1px #2b90d9;
+    color: #2b90d9;
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+    font-size: 40px;
+    margin: 0 auto 15px;
+    text-align: center;
+}
+.heading:after {
+    content: " ";
+    display: block;
+    width: 40px;
+    height: 1px;
+    margin: 10px 0 20px;
+    background: #2b90d9;
+}
+/* End of How it works */
+
+/* Featured Items */
+
+.card-featured{
+    overflow: hidden;
+}
+
+.card-text{
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+}
+
+.featured-items>h2{
+    text-align: center;
+    margin-bottom: 3%;
+}
+
+.pricat{
+    
+}
+
+.card-featured>img{
+    width: 100%;
+    height: 150px;
+    max-height: 150px;
+    transform: scale(1.2);
+    overflow: hidden;
+}
+
+/* End Of Featured Items */

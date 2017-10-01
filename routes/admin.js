@@ -223,7 +223,8 @@ if(req.user){
                 name: req.body.name,
                 description: req.body.description,
                 price: req.body.price,
-                category: req.body.category
+                category: req.body.category,
+                isFeatured: req.body.isFeatured
             });
         
         product.save(function(err){

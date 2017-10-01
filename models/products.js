@@ -6,10 +6,12 @@ var ProductSchema = new Schema({
     description: String,
     price: Number,
     category: String,
-    image: String
+    image: String,
+    isFeatured: {type: Boolean, default: false}
     
 });
 
 ProductSchema.index({'$**': 'text'});
 
 module.exports = mongoose.model('Product', ProductSchema);
+

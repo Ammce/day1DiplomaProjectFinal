@@ -1,21 +1,35 @@
 var router = require('express').Router();
 var Cart = require('../models/cart');
-
+var Product = require('../models/products');
 //Getting home page:
 
 
-
-router.get('/',  function(req, res, next){
-    var studentName = 'Amel Amce Muminovic';
-    var courses = ['javascript', 'c++', 'nodejs', 'express'];
+function featured(req, res, next){
     
-    res.render('home', {name: studentName, subjects: courses} );
-});
+    Product.find({isFeatured: true}, function(err, featured){
+        if(err){
+            return next(err);
+        }
+        else{
+           featuredItems = featured;
+            next();
+        }
+    });
+}
+
+function commAboutSite(req, res, next){
+    
+}
+
+function renderHomePage(req, res){
+    res.render('home', {featured: featuredItems});
+}
+
+router.get('/', featured, renderHomePage);
 
 router.get('/about',  function(req, res, next){
     
     res.render('about');
-    
 });
 
 

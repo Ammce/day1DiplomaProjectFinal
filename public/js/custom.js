@@ -34,15 +34,12 @@ $(document).ready(function(){
             quantity -= 1; 
          }
          
-        console.log(price);
-        console.log(quantity);
-        
-        
-        
         $('#quantity').val(quantity);
         $("#price").val(price);
         $('#total').html(quantity);
    
     });
+    
+   
 
 });
