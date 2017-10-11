@@ -4,6 +4,7 @@ var passport = require('passport');
 var cors = require('cors');
 var User = require('../models/user');
 var Cart = require('../models/cart');
+var History = require('../models/history');
 
 var corsOptions = {
     origin: "http://localhost:3000",
@@ -50,7 +51,6 @@ router.post('/view-product/:product_id', function(req, res, next){
     });  
 });
 
-
 router.get('/cart', function(req, res, next){
      var total = 0;
      var CartQ;
@@ -73,17 +73,28 @@ router.get('/cart', function(req, res, next){
              }
 });
 
-
-router.delete('/remove/:cart_item', cors(corsOptions), function(req, res, next){
+//Not working, ahhh
+router.post('/remove/:cart_item', cors(corsOptions), function(req, res, next){
 
     if(req.user){
-        Cart.findOneAndRemove({"items._id": req.params.cart_item}, function(err, deleted){
+        Cart.findOne({owner: req.user._id}, function(err, cart){
             if(err){
                 return next(err);
             }
             else{
-                res.redirect('/cart');
+                cart.items.update({
+                   
+                });
             }
+            
+            cart.save(function(err){
+                if(err){
+                    return next(err);
+                }
+                else{
+                    res.redirect('/');
+                }
+            });
         });
     }
     else{
@@ -122,11 +133,16 @@ router.get('/view-product/:product_id', cors(corsOptions), function(req, res, ne
         if(err){ return next(err);
                }
         else{
-            console.log(product);
+            
             res.render('view-product', {single: product});
         }
     });
 });
+
+router.get('/thankyou', function(req, res, next){
+    res.render('thankyou');
+});
+
 
 
 
@@ -187,9 +203,97 @@ router.get('/auth/facebook', passport.authenticate('facebook', { scope: [ 'email
 		}));
 
 
-router.get('/profile', isLoggedIn, function(req, res, next){
+
+function findUser(req, res, next){
+    User.findOne({_id: req.user._id}, function(err, user){
+        if(err){
+            return next(err);
+        }
+        else{ 
+            req.userrr = user;  
+            next();
+        }
+    });
+}
+
+function findCart(req, res, next){
+    Cart.findOne({owner: req.user._id}, function(err, founded){
+        if(err){
+            console.log(err);
+        }
+        else{
+            req.dataCart = founded;  
+            next();
+         }
+      });  
+ }
+
+
+function createHistory(req, res, next){
+      var history = new History();
+    history.customer = req.userrr;
+    history.bought = req.dataCart;
+    history.date = Date.now();
+    
+    history.save(function(err){
+        if(err){
+            return next(err);
+        }
+        else{
+            
+           next();
+        }
+    });
+}
+
+
+function emptyCart(req, res, next){
+    Cart.findOne({owner: req.user._id}, function(err, cart){
+        if(err){
+            return next(err);
+        }
+        else{
+            cart.set({
+                items: []
+            })
+        }
+        cart.save(function(err){
+            if(err){
+                return next(err);
+            }
+            else{
+                return next();
+            }
+        });
+    });
+}
+
+
+router.post('/chargeCash',findUser, findCart, createHistory, emptyCart,  function(req, res, next){
+  
+  res.redirect('/profile');
+    
+});
+
+
+
+function renderHistory(req, res, next){
+      History.find({customer: req.user._id}, function(err, history){
+          if(err){
+              return next(err);
+          }
+          else{
+              req.cartHistory = history;
+              next();
+              console.log(history);
+          }
+      });
+}
+
+
+router.get('/profile', isLoggedIn, renderHistory,  function(req, res, next){
     res.render('profile.ejs', {
-        user: req.user || req.facebook
+        user: req.user || req.facebook,  cartHistory: req.cartHistory
     });
 });
 

@@ -16,26 +16,93 @@
         <div class="row">
             <div class="col-lg-12">  
                 <h1>Welcome to the cart</h1>
-                
+               
                 <% for(var i=0; i< cart.items.length; i++ ){ %>
                     <div>
-                        
+                      <form method="post" action="/cart/<%= cart.items[i].item %>">    
                     <h1>ID: <%= cart.items[i]._id %></h1>
                     <h3>Item: <%= cart.items[i].item %></h3>
                     <h3>Name: <%= cart.items[i].name %> </h3>
                     <h3>Price: <%= cart.items[i].price %></h3>
                     <h3>Quantity: <%= cart.items[i].quantity %></h3>
+                    
+                   
+                    <button type="submit" class="btn btn-danger">Remove Item</button>
                     <hr>
-                    <a href="/remove/<%= cart.items[i].item %>?_method=DELETE" class="btn btn-danger">Delete item</a>
-                       
+                    </form>  
                         
                     </div>
                 <% } %>
                 <h1>Total to pay: <%= total %>$</h1>
-             
-
                 
-                <p> <%= cart %> </p>
+                <div id="paymentButtons">
+                <button type="button" id="payWithCard" class="btn btn-success">Pay with Card</button>
+                 <button type="button" id="payWithCash" class="btn btn-primary">Pay with Cash</button>   
+                </div>
+                
+                <div class="payments">
+                
+                    <div class="cardPayment">
+                   
+                        
+                        <form action="/chargeCard" method="post">
+                        
+                            <h3>Please enter informations bellow</h3>
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Shipping Address:</label>
+                                <input type="text" class="form-control" name="address">
+                            </div>
+                             <div class="form-group">
+                                <label>Telephone:</label>
+                                <input type="text" class="form-control" name="telephone">
+                            </div>
+                            <div class="form-group">
+                                <label>Card Number:</label>
+                                <input type="text" class="form-control" name="card">
+                            </div>
+                            <div class="form-group">
+                                <label>Expiration Date:</label>
+                                <input type="text" class="form-control" name="mm">
+                                <input type="text" class="form-control" name="yy">
+                            </div>
+                            <div class="form-group">
+                                <label>CVC:</label>
+                                <input type="text" class="form-control" name="dvc">
+                            </div>
+                            <input type="hidden" name="amount" value="<%= total %>">
+                            <button type="submit" class="btn btn-success">Submit Payment</button>
+                        </form>
+                        
+                    </div>
+                    
+                    <div class="cashPayment">
+                            
+                            <form action="/chargeCash" method="post">
+                                <input type="hidden" name="cartID" value="<%= cart._id %>">
+                                <h3>Please enter informations bellow</h3>
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Address:</label>
+                                <input type="text" class="form-control" name="address">
+                            </div>
+                             <div class="form-group">
+                                <label>Telephone:</label>
+                                <input type="text" class="form-control" name="telephone">
+                            </div>
+                            <input type="hidden" name="amount" value="<%= total %>">
+                            <button type="submit" class="btn btn-success">Submit Payment</button>
+                        </form>
+                    </div>
+                
+                
+                </div>
             </div>          
         </div>
     </div>

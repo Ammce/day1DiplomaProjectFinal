@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var User = require('../models/user');
 var Product = require('../models/products');
+var History = require('../models/history');
 var cors = require('cors');
 var corsOptions = {
     origin: "http://localhost:3000",
@@ -102,6 +103,25 @@ router.get('/products', function(req, res, next){
         }
     });
       
+});
+
+router.post('/chargeCash', function(req, res, next){
+    
+    var history = new History();
+    history.buyer = req.user._id;
+    history.shop = req.body.cartID;
+    
+    history.save(function(err){
+        if(err){
+            return next(err);
+        }
+        else{
+            res.redirect("/profile");
+            console.log(history);
+        }
+    });
+    
+    
 });
 
 

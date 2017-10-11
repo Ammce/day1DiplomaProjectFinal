@@ -40,6 +40,21 @@ $(document).ready(function(){
    
     });
     
+        
+    $("#payWithCard").click(function(){
+        
+        $(".cardPayment").show();
+        $('.cashPayment').hide();
+    
+    });
+    
+     $("#payWithCash").click(function(){
+        
+        $(".cashPayment").show();
+        $('.cardPayment').hide();
+    
+    });
+    
    
 
 });

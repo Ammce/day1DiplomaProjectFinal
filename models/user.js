@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-
-var userSchema = mongoose.Schema({
+var Schema = mongoose.Schema;
+var userSchema = new Schema({
     
     local : {
         email: String,
@@ -18,7 +18,8 @@ var userSchema = mongoose.Schema({
         token        : String,
         email        : String,
         name         : String,
-        picture: {type: String, default: ''}
+        picture: {type: String, default: ''},
+        isAdmin: {type: Boolean, default: false}
         
     }
     

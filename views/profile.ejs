@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/css/custom.css">
 
 <title>Buy Tonight</title>
+    
 </head>
 <body>
  
@@ -38,6 +39,39 @@
                  <img class="img-circle img-responsive img-center" src="<%= user.facebook.picture %>" alt="">
 
             </div>
+        </div>
+        
+        
+        <div class="col-sm-6"> 
+            <h3><span class="fa fa-history"></span> History of Buying</h3>
+           
+            <table>
+                 <tr>
+                
+                    <th>Name of product</th>
+                    <th>Quantity</th>
+                    <th>Date and Time</th>
+                    
+                </tr>
+            <% var i = 0; %>
+            <% for(i=0; i<cartHistory.length; i++){ %>
+                
+               
+            
+                <% for(var j=0; j<cartHistory[i].bought.items.length; j++){ %>
+                
+                    <tr>
+                        <td> <%= cartHistory[i].bought.items[j].name %> </td>
+                        <td> <%= cartHistory[i].bought.items[j].quantity %> </td>
+                        <td> <%= cartHistory[i].date %> </td>
+                    </tr>
+                
+                <% } %>
+            
+            <% } %>
+            </table>
+            
+        
         </div>
 
     </div>

@@ -8,6 +8,11 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var Simplify = require("simplify-commerce"),
+    client = Simplify.getClient({
+        publicKey: Secret.simplifyPublic,
+        privateKey: Secret.simplifyPrivate
+    });
 var cors = require('cors');
 var MongoStore = require('connect-mongo')(session);
 var multer = require('multer');
@@ -68,13 +73,14 @@ var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 require('./config/passport')(passport); 
 
-app.use(cartFun);
+
 
 //Use routes
-app.use(mainRoutes);
+app.use(cartFun);
 app.use(userRoutes);
 app.use(adminRoutes);
 
+app.use(mainRoutes);
 
 
 //Testing uploads
