@@ -102,7 +102,7 @@ app.get('*', function(req, res, next){
 });
 
 //Running the server
-app.listen(Secret.port, function(err){
+app.listen(process.env.PORT || Secret.port, function(err){
     if(err){
         console.log(err);
     }

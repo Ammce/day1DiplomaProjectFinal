@@ -388,6 +388,10 @@ tr:nth-child(even) {
     
 }
 
+.logo{
+    font-family: 'Gloria Hallelujah', cursive;
+}
+
 .cart-image>img{
     min-height: 100px;
     max-height: 100px;
@@ -674,6 +678,11 @@ display: none;
     text-align: center;
 }
 
+.th-custom{
+    background-color: #292b2c;
+    color: rgba(255,255,255,.7);
+    text-align: center;
+}
 
 /************************************/
 /* MEDIA QUERIES */
