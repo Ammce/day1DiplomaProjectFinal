@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/custom.css">
@@ -12,32 +13,66 @@
  
     <% include partials/navbar.ejs %>
     
-    <div class="container wrapper">
+    <% if (messages.length > 0) { %>
+            <div class="alert alert-success" style="text-align: center"><%= messages %></div>
+    <% } %>
+    
+    <div class="container">
         <div class="row">
-            <div class="col-lg-12">  
-                <h1>Welcome to the cart</h1>
+        <div class="cont-shop-class col-sm-12">
+            <a class="cont-shop" href="/products"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Continue Shopping </a> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">  
+    
+               
+             <div class="cartItems">
+                 
                
                 <% for(var i=0; i< cart.items.length; i++ ){ %>
-                    <div>
-                      <form method="post" action="/cart/<%= cart.items[i].item %>">    
-                    <h1>ID: <%= cart.items[i]._id %></h1>
-                    <h3>Item: <%= cart.items[i].item %></h3>
-                    <h3>Name: <%= cart.items[i].name %> </h3>
-                    <h3>Price: <%= cart.items[i].price %></h3>
-                    <h3>Quantity: <%= cart.items[i].quantity %></h3>
-                    
-                   
-                    <button type="submit" class="btn btn-danger">Remove Item</button>
-                    <hr>
-                    </form>  
+                    <div class="cart-row row">
+                      
                         
+                        <div class="cart-image col-sm-3">
+                            <img src="<%= cart.items[i].image %>" class="img-fluid rounded">
+                        </div>
+                          
+                          <div class="cart-data col-sm-4">
+                           <h3><%= cart.items[i].name %> </h3>
+                              <h4><%= cart.items[i].category %></h4>
+                               <% var realPrice = (cart.items[i].price/cart.items[i].quantity); %>
+                            <h4>$<%= realPrice %></h4>
+                              <h4><%= cart.items[i].store %></h4>
+                          </div>
+                            <div class="cart-data col-sm-2">
+                            <h4><%= cart.items[i].quantity %></h4>
+                            </div>
+                        
+                        <div class="cart-data col-sm-3">
+                        <a href="/remove/<%= cart.items[i].item %>" class="btn btn-danger">Remove Item</a>
+                        </div>
+                            
                     </div>
-                <% } %>
-                <h1>Total to pay: <%= total %>$</h1>
+                <% } %>   
+             </div>
+              
+            </div> 
+            
+            
+            <div class="col-sm-4">
+                
+                <div class="payment-block">
+            
+                     <h5> Subtotal: <strong class="float-right"> $<%= cart.total %></strong></h5>
+                    <h5> Discount: <strong class="float-right">$0</strong></h5>
+                    <h5> Total: <strong class="float-right">$<%= cart.total %></strong></h5>
+                    
+                </div>
                 
                 <div id="paymentButtons">
-                <button type="button" id="payWithCard" class="btn btn-success">Pay with Card</button>
-                 <button type="button" id="payWithCash" class="btn btn-primary">Pay with Cash</button>   
+                <button type="button" id="payWithCard" class="btn btn-success">Pay with Card <i class="fa fa-cc-visa" aria-hidden="true"></i></button>
+                 <button type="button" id="payWithCash" class="btn btn-primary">Pay with Cash <i class="fa fa-money" aria-hidden="true"></i></button>   
                 </div>
                 
                 <div class="payments">
@@ -50,30 +85,29 @@
                             <h3>Please enter informations bellow</h3>
                             <div class="form-group">
                                 <label>Name:</label>
-                                <input type="text" class="form-control" name="name">
+                                <input type="text" class="form-control" name="name" required>
                             </div>
                             <div class="form-group">
                                 <label>Shipping Address:</label>
-                                <input type="text" class="form-control" name="address">
+                                <input type="text" class="form-control" name="address" required>
                             </div>
                              <div class="form-group">
                                 <label>Telephone:</label>
-                                <input type="text" class="form-control" name="telephone">
+                                <input type="text" class="form-control" name="telephone" required>
                             </div>
                             <div class="form-group">
                                 <label>Card Number:</label>
-                                <input type="text" class="form-control" name="card">
+                                <input type="text" class="form-control" name="card"  required>
                             </div>
                             <div class="form-group">
                                 <label>Expiration Date:</label>
-                                <input type="text" class="form-control" name="mm">
-                                <input type="text" class="form-control" name="yy">
+                                <input type="text" class="form-control" name="mm" required>
+                                <input type="text" class="form-control" name="yy" required>
                             </div>
                             <div class="form-group">
                                 <label>CVC:</label>
-                                <input type="text" class="form-control" name="dvc">
+                                <input type="text" class="form-control" name="cvc" required>
                             </div>
-                            <input type="hidden" name="amount" value="<%= total %>">
                             <button type="submit" class="btn btn-success">Submit Payment</button>
                         </form>
                         
@@ -86,24 +120,24 @@
                                 <h3>Please enter informations bellow</h3>
                             <div class="form-group">
                                 <label>Name:</label>
-                                <input type="text" class="form-control" name="name">
+                                <input type="text" class="form-control" name="name" required>
                             </div>
                             <div class="form-group">
                                 <label>Address:</label>
-                                <input type="text" class="form-control" name="address">
+                                <input type="text" class="form-control" name="address" required>
                             </div>
                              <div class="form-group">
                                 <label>Telephone:</label>
-                                <input type="text" class="form-control" name="telephone">
+                                <input type="text" class="form-control" name="telephone" required>
                             </div>
-                            <input type="hidden" name="amount" value="<%= total %>">
-                            <button type="submit" class="btn btn-success">Submit Payment</button>
+                            <input type="hidden" name="amount" value="<%= cart.total %>">
+                            <button type="submit" class="btn btn-primary">Submit Payment</button>
                         </form>
                     </div>
                 
                 
                 </div>
-            </div>          
+            </div>
         </div>
     </div>
 
@@ -112,7 +146,10 @@
  <% include partials/footer.ejs %>     
     
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <script src="/js/custom.js"></script>

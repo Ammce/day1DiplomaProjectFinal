@@ -13,15 +13,15 @@ var Simplify = require("simplify-commerce"),
         publicKey: Secret.simplifyPublic,
         privateKey: Secret.simplifyPrivate
     });
+var nodemailer = require('nodemailer');
+var xoauth2 = require('xoauth2');
 var cors = require('cors');
 var MongoStore = require('connect-mongo')(session);
 var multer = require('multer');
 var upload = multer({dest: 'public/images/' });
 var cartFun = require('./custom/cartFun');
-
 //Running the express
 var app = express();
-
 
 //Connect to the database :)
 
@@ -53,7 +53,6 @@ app.use(flash());
 app.use(cors());
 
 
-
 //Teach express to use local variables everywhere for example in nav bar
 app.use(function(req, res, next){
     res.locals.user = req.user;
@@ -79,7 +78,6 @@ require('./config/passport')(passport);
 app.use(cartFun);
 app.use(userRoutes);
 app.use(adminRoutes);
-
 app.use(mainRoutes);
 
 
@@ -110,5 +108,7 @@ app.listen(Secret.port, function(err){
     }
     else {
         console.log('Server is running on 3000');
+        
+        
     }
 });

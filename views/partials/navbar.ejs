@@ -2,24 +2,27 @@
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-  <a class="navbar-brand" href="/">Buy Tonight</a>
+  <a class="navbar-brand" href="/products">Buy Tonight</a>
       <div class="collapse navbar-collapse justify-content-between" id="navbar">
         <div class="navbar-nav">
-              <a class="nav-item nav-link" href="/">Home</a>
-              <a class="nav-item nav-link" href="/about">About</a>
-              <a class="nav-item nav-link" href="/profile">Profile</a>
+              <a class="nav-item nav-link"   href="/">Home</a>
+              <a class="nav-item nav-link"  href="/">About</a>
               <a class="nav-item nav-link" href="/products">Products</a>
-              <a class="nav-item nav-link" href="/add-product">Add Item</a>
+              <a class="nav-item nav-link"  href="/">Contact</a>
              
         </div>
           
           <% if (user) { %>
 
                 <% if(user.local.isAdmin){ %>
-
+                    <form class="form-inline my-2 my-lg-0" action="/searchtext" method="get">
+                          <input class="form-control mr-sm-2" name="searchterm" type="text" placeholder="Search">
+                          <button class="btn btn-outline-info my-2 my-sm-0" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </form>
                     <div class="navbar-nav">
-                        <form class="form-inline pull-xs-right ">
-                            <a href="/cart" class="fa fa-shopping-cart fa-lg" aria-hidden="true"><span class="badge"><%= cartQ.total %></span></a>
+                        
+                        <form class="info-form-mob form-inline pull-xs-right ">
+                            <a href="/cart" class="fa fa-shopping-cart fa-lg" aria-hidden="true"><span class="badge"><%= cartQ.items.length %></span></a>
                             <a class="nav-item nav-link" href="/admin">AdminPanel</a>
                             <a class="nav-item nav-link" href="/profile"><%= user.local.name || user.facebook.name %> </a>
                            <a class="nav-item nav-link" href="/logout">Logout</a>
@@ -27,21 +30,33 @@
                     </div>
                 <%} else { %>
           
-                    <div class="navbar-nav">
-                        <form class="form-inline pull-xs-right ">
-                            <a href="/cart" class="fa fa-shopping-cart fa-lg" aria-hidden="true"><span class="badge"><%= cartQ.total %></span></a>
-                            <a class="nav-item nav-link" href="/profile"><%= user.local.name || user.facebook.name %> </a>
-                           <a class="nav-item nav-link" href="/logout">Logout</a>
+                    
+                        <form class="form-inline my-2 my-lg-0" action="/searchtext" method="get">
+                          <input class="form-control mr-sm-2" name="searchterm" type="text" placeholder="Search">
+                          <button class="btn btn-outline-info my-2 my-sm-0" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
+                    <div class="navbar-nav">
+                        
+                        
+                        
+                        <form class="form-inline pull-xs-right ">
+                            
+                            <a href="/cart" class="fa fa-shopping-cart fa-lg" aria-hidden="true"><span class="badge"><%= cartQ.items.length %></span></a>
+                            <a class="nav-item nav-link" href="/profile"><%= user.local.name || user.facebook.name %> </a>
+                            <a class="nav-item nav-link" href="/logout">Logout</a> 
+                          
+                        </form>
+                        
+                        
                     </div>
                 <% } %>
           <% } else { %>
           <div class="navbar-nav">
-            <form class="form-inline pull-xs-right ">
+            <form class="info-form-mob form-inline pull-xs-right ">
             <a class="nav-item nav-link" href="/login">Login</a>
-               <a class="nav-item nav-link" href="#">/</a>
+               <a class="mob-hidden nav-item nav-link" href="#">/</a>
               <a class="nav-item nav-link" href="/signup">Register</a>
-                <a class="nav-item nav-link" href="#">/</a>
+                <a class="mob-hidden nav-item nav-link" href="#">/</a>
               <a href="/auth/facebook" class="nav-item nav-link"><span class="fa fa-facebook"></span> Facebook</a>
     
             </form>

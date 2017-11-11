@@ -1,5 +1,8 @@
 $(document).ready(function(){
    
+    $(".view-product-fade").each(function(index) {
+    $(this).delay(300*index).fadeIn(200);
+});
     
     $("#plus").click(function(e){
         e.preventDefault();
@@ -42,19 +45,61 @@ $(document).ready(function(){
     
         
     $("#payWithCard").click(function(){
-        
-        $(".cardPayment").show();
-        $('.cashPayment').hide();
-    
+        $('.cashPayment').fadeOut(300, "swing", function(){
+            $(".cardPayment").fadeIn("fast");
+        });
+
     });
     
      $("#payWithCash").click(function(){
         
-        $(".cashPayment").show();
-        $('.cardPayment').hide();
+       
+        $('.cardPayment').fadeOut(300, "swing", function(){
+             $(".cashPayment").fadeIn("fast");
+        } );
     
     });
     
+    $("#nav-about").click(function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: $("#about-section-us").offset().top
+        }, 1500);
+    });
+    $("#nav-contact").click(function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: $(".contact-us-section").offset().top
+        }, 1500);
+    });
+    
+    $("#nav-home").click(function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: $(".home-section").offset().top
+        }, 1500);
+    });
+    
+  
+        var xda = $(".currSts").text();
+        console.log(xda);
+        if(xda == 'Buying in progress'){
+            $("#1two").attr('checked', 'checked');
+        }
+        else if(xda == 'Shipping to Address'){
+            $("#1tree").attr('checked', 'checked');
+        }
+        else if(xda == 'Order Delivered'){
+            $("#1four").attr('checked', 'checked');
+        }
+        else {
+            $("#1one").attr('checked', 'checked');
+        }
+      
    
+    
+   
+ 
+       
 
 });

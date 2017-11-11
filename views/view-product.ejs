@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/custom.css">
@@ -14,16 +15,22 @@
     
     <div class="container">
     
-        <div class="row">
+        <div class="view-product-row row">
         
-            <div class="col-sm-5">
+            <div class="col-sm-12 col-md-12 col-lg-5">
             
-                <img src="<%= single.image %>" class="img-fluid rounded-circle "> 
+                <img src="<%= single.image %>" class="rounded-prod img-fluid rounded "> 
             
             </div>
             
-            <div class="col-sm-2"></div>
-            <div class="col-sm-5">
+            <div class="view-product-info-wrapper col-sm-12 col-md-12 col-lg-7">
+                
+                <div class="view-product-info">
+                    <h2><%= single.name %></h3>
+                    <p><%= single.description %></p>
+                    <h5>Category: <%= single.category %></h5>
+                    <h5>Store: <%= single.store %></h5>
+                </div>
             
                  <form method="post" style="text-align: center">
                     
@@ -38,6 +45,9 @@
                 
                         <input type="hidden" name="product_id" id="id_id_id" value="<%= single._id %>"> </input>
                         <input type="hidden" name="priceHidden" id="priceHidden" value="<%= single.price %>"> </input>
+                        <input type="hidden" name="imageURL" value="<%= single.image %>"> </input>
+                        <input type="hidden" name="category" value="<%= single.category %>"> </input>
+                        <input type="hidden" name="store" value="<%= single.store %>"> </input>
             
                         <input type="text" name="item" class="form-control" value="<%= single.name %>" readonly> </input>
                         <input type="text" id="price" name="price" class="form-control" value="<%= single.price %>"  readonly> </input>
@@ -49,10 +59,49 @@
 
 
                 </form>
+                <div class="view-product-info">
+                    
+                    <p>Shipping: Free Shipping</p>
+                    <p>Delivery: Within 2 hours</p>
+                    <p>Payments: Cash or Credit Card</p>
+                </div>
+                    
             
             </div>
         
         </div>
+                <div class="similar-row row">
+                    <div class="col-sm-12"> 
+                        <h3 >People who bought <%= single.name %> also like</h3> 
+                    </div>
+                    
+                        <% similar.forEach(function(item){ %>
+                            <% if(item.name !== single.name){ %>
+                                <div class=" col-6 view-product-fade product-card-col col-sm-6 col-md-3">
+                    <a href="/view-product/<%= item._id %>">
+                   <div class="product-card">
+    
+                        <img src="<%= item.image %>" class="img-fluid rounded">
+                        <div class="product-card-infos">
+                            <h5><%= item.name %> </h5>
+                            <h2>$<%= item.price %> </h2>
+                                <% if(item.price > 500){ %>
+                            <span class="product-card-price">
+                                Expensive item
+                            </span>
+                                <% } %>
+                       </div>
+                    </div>
+                    </a>
+                    </div>
+                            <% } %>
+                        <% }) %>
+                    
+                
+
+
+                </div>
+        
     
     
     </div>
@@ -61,7 +110,10 @@
     
  <% include partials/footer.ejs %>     
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <script src="/js/custom.js"></script>

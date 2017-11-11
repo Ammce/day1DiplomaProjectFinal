@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/custom.css">
@@ -11,78 +12,226 @@
 </head>
 <body>
  
+    <div class="fullPage">
     <% include partials/navbar.ejs %>
-    
-    
-<div class="container">
-
-    <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
         
-    </div>
-
-    <div class="row">
-
-        <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3><span class="fa fa-user"></span> My profile</h3>
-
-                    <p>
-                        <strong>Welcome</strong>: <%= user.local.name %><%= user.facebook.name %><br>
-                        <strong>id</strong>: <%= user._id %><%= user.facebook.id %><br>
-                        <strong>email</strong>: <%= user.local.email %> <%= user.facebook.email %><br>
-                        <strong>password</strong>: <%= user.local.password %> <br>
-                        <strong>Address</strong>: <%= user.local.address %> <br>
-                        <strong>token</strong>: <%= user.facebook.token %>
-                    </p>
-                 <img class="img-circle img-responsive img-center" src="<%= user.facebook.picture %>" alt="">
-
-            </div>
-        </div>
+        <div class="profileInfo">
         
-        
-        <div class="col-sm-6"> 
-            <h3><span class="fa fa-history"></span> History of Buying</h3>
-           
-            <table>
-                 <tr>
+            <div class="profile-info-container container">
+            
+                <div class="profile-info-container row">
                 
-                    <th>Name of product</th>
-                    <th>Quantity</th>
-                    <th>Date and Time</th>
+                    <div class="profile-page-margin col-sm-3 profile-img">
                     
-                </tr>
-            <% var i = 0; %>
-            <% for(i=0; i<cartHistory.length; i++){ %>
-                
-               
+                        <img class="profile-pic-img img-fluid rounded-circle" src="<%= user.facebook.picture || user.local.picture %>" alt="">
+
+                    
+                    </div>
+                    
+                    <div class="profile-page-margin col-sm-9 profile-img">
+                        <div class="profile-info-p">
+                        <p><strong>Name:</strong> <%= user.local.name %><%= user.facebook.name %></p>
+                        <p><strong>Email:</strong> <%= user.local.email %> <%= user.facebook.email %></p>
+                        <p><strong>Address:</strong> <%= user.local.address %><%= user.facebook.address %> </p>
+                        <p><strong>Level:</strong> Newbie</p>
+                        
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Edit Profile</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg">Buying History </button>
+                            </div>
+                    
+                    </div>
+                    
+                </div>
             
-                <% for(var j=0; j<cartHistory[i].bought.items.length; j++){ %>
-                
-                    <tr>
-                        <td> <%= cartHistory[i].bought.items[j].name %> </td>
-                        <td> <%= cartHistory[i].bought.items[j].quantity %> </td>
-                        <td> <%= cartHistory[i].date %> </td>
-                    </tr>
-                
-                <% } %>
-            
-            <% } %>
-            </table>
+            </div>
             
         
         </div>
+        
+        <div class="profileContent">
+            
+            <div class="container">
+            
+                <div class="row">
+                    <h3><span class="fa fa-shopping-basket"></span> Still buying</h3>
+                    <div style="overflow-x:auto;" class="col-sm-12 stillBuying">
+                    
+                        
+                        
+                        <table>
+                            
+                            <tr>
+                            
+                                <th class="mob-hidden">Order ID</th>
+                                <th>Items</th>
+                                <th>Order Date</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>View Order</th>
+                            
+                            </tr>
+                            
+                           <% for(var i=0; i<cartHistory.length; i++) { %>
+                                
+                                <% if(cartHistory[i].delivered == false){ %>
+                                
+                                    
+                                <!--  -->
+                                    <tr>
+                                        <td class="mob-hidden"><%= cartHistory[i]._id %></td>
+                                       <td> <table><tr>
+                                                <th>Name</th>
+                                                <th>Quantity</th>
+                                                </tr>
+                                           
+                                           <% for(var j=0; j<cartHistory[i].bought.items.length; j++){ %>
+                                       <tr> <td><%= cartHistory[i].bought.items[j].name %></td>
+                                           <td><%= cartHistory[i].bought.items[j].quantity %></td>
+                                           </tr>
+                                           <% } %></table></td>
+                                        <% var xdTime = cartHistory[i].date.toString(); %>
+                                        <% var shortTime = xdTime.slice(3, 21); %>
+                                        <td><%= shortTime %></td>
+                                        <% if(cartHistory[i].paymentCash == true){ %>
+                                            <td style=" text-align: center;">$<%= cartHistory[i].bought.total %> <br><hr> <p>Cash on delivery</p>
+                                                
+                                        </td>
+                                        <% } else { %>
+                                            <td style=" text-align: center;">$<%= cartHistory[i].bought.total %> <br><hr> <p>Paid with Card</p></td>
+                                        <% } %>
+                                        
+                                        <td class="table-status">
+                                            
+                                            <% if(cartHistory[i].status == 'Order accepted!'){ %>
+                                                <p id="order-accepted">Order accepted</p>
+                                            <% } else if(cartHistory[i].status == 'Buying in progress'){ %>
+                                                <p id="order-progress">Buying in progress</p>
+                                            <% } else if(cartHistory[i].status == 'Shipping to Address'){ %>
+                                                <p id="order-address">Shipping to Address</p>
+                                            <% } %> 
+                                                
+                                            
+                                        </td>
+                                        <td><a href="/seeOrderHistory/<%= cartHistory[i]._id %>" class="btn btn-primary" >Confirm Order Recived
+                                            </button></td>
+                                    </tr>
+                                
+                            
+                                <% } %>
+                            
+                            <% } %>
+                        </table>
+                       
+                    </div>
+                
+                </div>
+                
+            </div>
+        
+        
+        </div>
+                            
+            <!-- Modal to verify order -->
+                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">This is your buying history!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form method="post" action="/userRecived">
+                        <div class="modal-body">
+                            <table>
+                               <tr>
+                                 <th class="mob-hidden">Order ID</th>   
+                                 <th>Ordered</th>
+                                 <th>Delivered </th>
+                                 <th>See full order</th>
+                                </tr>
+                                <% for(var i=0; i<cartHistory.length; i++) { %>
+                                 <% if(cartHistory[i].delivered == true){ %>
+                                 
+                                
+                                    <tr>
+                                        <td class="mob-hidden"> <%= cartHistory[i]._id %> </td>
+                                        <% var xdTime1 = cartHistory[i].date.toString(); %>
+                                        <% var shortTime1 = xdTime1.slice(3, 21); %>
+                                        <% var xdTime2 = cartHistory[i].dateDelivered.toString(); %>
+                                        <% var shortTime2 = xdTime2.slice(3, 21); %>
+                                        
+                                        <td><%= shortTime1 %></td>
+                                        <td><%= shortTime2 %></td>
+                                        <td><a href="/seeOrderHistory/<%= cartHistory[i]._id %>" class="btn btn-danger">See full order</a></td>
+                                    </tr>
+                
+                                        <% } %>
 
-    </div>
+                                    <% } %>
+                                    
+                            </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+            <!-- -->
+        
+        <!-- Modal to verify order -->
+                <div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Edit User Information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+    
+                        <div class="modal-body">
+                            <form method="post" action="/edit-user-profile">
+                            
+                            <div class="form-group">
+                                <label for="edit-user">Name of User</label>
+                                <input type="text" class="form-control" name="name" value="<%= user.local.name || user.facebook.name %> ">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-user">Address of User</label>
+                                <input type="text" class="form-control" name="address" value="<%= user.local.address || user.facebook.address %> ">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-user">Url of image</label>
+                                <input type="text" class="form-control" name="picture" value="<%= user.local.picture || user.facebook.picture %> ">
+                            </div>
+                            
+                            
+                            
+                           
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Info</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                            </form>
+                    </div>
+                  </div>
+                </div>
 
-</div>
-
+<% if(cartHistory.length < 2){ %>
+        <div style="margin-bottom: 18%;"></div>
+        <% } %>
     
  <% include partials/footer.ejs %>     
-    
+  </div>  
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <script src="/js/custom.js"></script>

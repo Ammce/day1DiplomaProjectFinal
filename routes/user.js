@@ -5,7 +5,13 @@ var cors = require('cors');
 var User = require('../models/user');
 var Cart = require('../models/cart');
 var History = require('../models/history');
+var Secret = require('../config/secret');
 
+var Simplify = require("simplify-commerce"),
+    client = Simplify.getClient({
+        publicKey: Secret.simplifyPublic,
+        privateKey: Secret.simplifyPrivate
+    });
 var corsOptions = {
     origin: "http://localhost:3000",
     optionSuccessStatus: 200
@@ -36,9 +42,13 @@ router.post('/view-product/:product_id', function(req, res, next){
             item: req.body.product_id,
             name: req.body.item,
             quantity: req.body.quantity, 
-            price: req.body.price
+            price: req.body.price,
+            image: req.body.imageURL,
+            category: req.body.category,
+            store: req.body.store
         });
         
+        cart.total += parseInt(req.body.price);
         
         cart.save(function(err){
             if(err){
@@ -52,29 +62,46 @@ router.post('/view-product/:product_id', function(req, res, next){
 });
 
 router.get('/cart', function(req, res, next){
-     var total = 0;
      var CartQ;
+     var productQ;
      if(req.user){
            Cart.findOne({owner: req.user._id}, function(err, cart){  
                 if(err){
                     return next(err);
                     }
                 else{
-                
-                    cartQ = cart;      
-                 for(var i=0; i<cartQ.items.length; i++){
-                     total += cartQ.items[i].price;
-                 }
-                res.render('cart', {cart: cartQ, total: total});     
+                    /*
+                    for(var i=0; i<cart.items.length; i++){
+                        
+                        Product.findOne({_id: cart.items[i].item}, function(err, product){
+                            if(err){
+                                return next(err);
+                            }
+                            else{
+                             productQ = product;
+                            console.log(cart[0]);
+                             
+                            }
+         
+                        });
+                        
+                           
+                    } */
+                    
+                    
+
+                    cartQ = cart; 
+                    
+                res.render('cart', {cart: cartQ, messages: req.flash('itemRemove')});     
                     }});
-          }
+     }
          else{
                  res.redirect('/login');
              }
 });
 
 //Not working, ahhh
-router.post('/remove/:cart_item', cors(corsOptions), function(req, res, next){
+router.get('/remove/:cart_item', cors(corsOptions), function(req, res, next){
 
     if(req.user){
         Cart.findOne({owner: req.user._id}, function(err, cart){
@@ -82,19 +109,24 @@ router.post('/remove/:cart_item', cors(corsOptions), function(req, res, next){
                 return next(err);
             }
             else{
-                cart.items.update({
-                   
+                for(var i=0; i<cart.items.length; i++){
+                    if(cart.items[i].item == req.params.cart_item){
+                        cart.total -= parseInt(cart.items[i].price);
+                        cart.items.splice(i, 1);  
+                    }
+                } 
+                cart.save(function(err){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        req.flash('itemRemove', 'Item removed from the cart!');
+                        res.redirect('/cart');
+                    }
                 });
             }
             
-            cart.save(function(err){
-                if(err){
-                    return next(err);
-                }
-                else{
-                    res.redirect('/');
-                }
-            });
+         
         });
     }
     else{
@@ -125,19 +157,50 @@ router.get('/searchtext', function(req, res, next){
 
 //Find one by id and send it back
 
-router.get('/view-product/:product_id', cors(corsOptions), function(req, res, next){
-    Product.findOne({
+
+
+function findProductz(req, res, next){
+     Product.findOne({
         _id: req.params.product_id
     })
         .exec(function(err, product){
         if(err){ return next(err);
                }
         else{
+            req.product = product;
+            next();
             
-            res.render('view-product', {single: product});
+            
         }
     });
+}
+function findSimilar(req, res, next){
+   
+       Product.findOne({
+        _id: req.params.product_id
+    })
+        .exec(function(err, product){
+        if(err){ return next(err);
+               }
+        else{
+            Product.findRandom().where('category').equals(product.category).limit(5).exec(function (err, products) {
+            req.similar = products;
+            next();
 });
+            
+            
+        }
+    });
+    
+}
+
+router.get('/view-product/:product_id', isLoggedIn,  findProductz ,  cors(corsOptions), findSimilar, function(req, res, next){
+   res.render('view-product', {single: req.product, similar: req.similar});
+
+});
+
+
+
 
 router.get('/thankyou', function(req, res, next){
     res.render('thankyou');
@@ -162,7 +225,7 @@ router.get('/login', function(req, res, next){
 });
 
 router.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
+        successRedirect : '/products', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -172,10 +235,10 @@ router.post('/login', passport.authenticate('local-login', {
 router.get('/signup', function(req, res, next){
     
     if(req.user){
-        res.redirect('/profile');
+        res.redirect('/products');
     } 
     else if(req.facebook){
-        res.redirect('/profile');
+        res.redirect('/products');
     }
     else{
         res.render('signup.ejs', {message: req.flash('signupMessage')});
@@ -184,7 +247,7 @@ router.get('/signup', function(req, res, next){
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/profile', // redirect to the secure profile section
+        successRedirect : '/products', // redirect to the secure profile section
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -234,6 +297,10 @@ function createHistory(req, res, next){
     history.customer = req.userrr;
     history.bought = req.dataCart;
     history.date = Date.now();
+    history.address = req.body.address;
+    history.telephone = req.body.telephone;
+    history.paymentCash = true;
+    history.store = req.body.store;
     
     history.save(function(err){
         if(err){
@@ -246,6 +313,46 @@ function createHistory(req, res, next){
     });
 }
 
+function createDebitHistory(req, res, next){
+      var history = new History();
+    history.customer = req.userrr;
+    history.bought = req.dataCart;
+    history.date = Date.now();
+    history.address = req.body.address;
+    history.telephone = req.body.telephone;
+    history.paymentCash = false;
+    history.store = req.body.store;
+    
+    history.save(function(err){
+        if(err){
+            return next(err);
+        }
+        else{
+            
+             client.payment.create({
+        amount: req.dataCart.total*100,
+        description: 'Paying for BuyTonight',
+        currency: "USD", 
+        card: {
+            expMonth: req.body.mm,
+            expYear:req.body.yy,
+            name: req.body.name,
+            cvc : req.body.cvc,
+            number: req.body.card,
+            
+        }
+    }, function(err, data){
+        if(err){
+            return next(err);
+        }
+        else{
+            next();
+        }
+    });
+        }
+    });
+  
+}
 
 function emptyCart(req, res, next){
     Cart.findOne({owner: req.user._id}, function(err, cart){
@@ -254,7 +361,8 @@ function emptyCart(req, res, next){
         }
         else{
             cart.set({
-                items: []
+                items: [],
+                total: 0
             })
         }
         cart.save(function(err){
@@ -269,11 +377,72 @@ function emptyCart(req, res, next){
 }
 
 
-router.post('/chargeCash',findUser, findCart, createHistory, emptyCart,  function(req, res, next){
+router.post('/chargeCash',findUser, findCart, createHistory,  emptyCart,  function(req, res, next){
   
+    
   res.redirect('/profile');
     
+    
 });
+
+router.post('/chargeCard',findUser, findCart, createDebitHistory, emptyCart,  function(req, res, next){
+  
+    
+    
+  res.redirect('/profile');
+    
+    
+});
+
+
+router.get("/seeOrderHistory/:order_id", function(req, res, next){
+    if(req.user){
+        
+        History.findOne({_id: req.params.order_id}, function(err, history){
+         if(err){
+             return next(err);
+         }   
+            else{
+                if(history.delivered == true){
+                    res.render('sohistory', {history:history});
+                }
+                else{
+                    res.render('stillhistory', {history:history});
+                }
+            }
+        });
+        
+    }
+    else{
+        res.redirect('/login');
+    }
+});
+
+
+router.post("/confirmDE", function(req, res, next){
+    History.findOne({_id: req.body.zxcv}, function(err, history){
+        if(err){
+            return next(err);
+        }
+        else{
+           history.set({
+               delivered: true,
+               dateDelivered: Date.now()
+           });
+            
+            history.save(function(err){
+                if(err){
+                    return next(err);
+                }
+                else{
+                    res.redirect('/profile');
+                }
+            });
+        }
+    });
+});
+
+
 
 
 
@@ -285,7 +454,7 @@ function renderHistory(req, res, next){
           else{
               req.cartHistory = history;
               next();
-              console.log(history);
+              
           }
       });
 }
@@ -297,6 +466,53 @@ router.get('/profile', isLoggedIn, renderHistory,  function(req, res, next){
     });
 });
 
+router.post("/edit-user-profile", function(req, res, next){
+   
+          User.findOne({_id: req.user._id}, function(err, user){
+            if(err){
+                return next(err);
+            }
+            else{
+              if(user.local.name !== undefined && user.local.name !== ''){
+                  user.set({
+                      "local.name": req.body.name,
+                      "local.address": req.body.address,
+                      "local.picture": req.body.picture
+                  });
+                  user.save(function(err){
+                      if(err){
+                          return next(err);
+                      }
+                      else{
+                          res.redirect('/profile');
+                      }
+                  });
+              }
+                else{
+                    user.set({
+                      "facebook.name": req.body.name,
+                      "facebook.address": req.body.address,
+                      "facebook.picture": req.body.picture
+                  });
+                  user.save(function(err){
+                      if(err){
+                          return next(err);
+                      }
+                      else{
+                          res.redirect('/profile');
+                      }
+                  });
+                    
+                }
+                  
+              
+            }
+            
+        });
+
+        
+   
+});
 
 
 

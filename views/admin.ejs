@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/custom.css">
@@ -12,54 +13,244 @@
  
  <% include partials/navbar.ejs %>
     
-    <div class="container wrapper">
-        <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <h3>List of the users</h3>
-                
-                <ol>
-                    <% for(var i=0; i<users.length; i++){ %>
-                    
-                    <li><%= users[i].local.name || users[i].facebook.name%> <a href="/admin/<%= users[i]._id %>" class="btn btn-primary"> Edit User </a><a href="/delete-user/<%= users[i]._id %>?_method=DELETE" class="btn btn-danger">Delete user</a> </li> <hr>
-                    <% } %>
-                </ol>
-                
-            </div> 
+<!--  Counter for Histories  -->
+    <% var totalSpent = 0 %>
+     <% var deliveredItems = 0; %>
+    <% var notDeliveredItems = 0; %>
+    <% var totalItems = histories.length %>
+   <% for(var i=0; i<histories.length; i++){ %>
+    
+        <% if(histories[i].delivered == false){ %>
             
-            <div class="col-xs-12 col-md-4">
-                <h3>List of admins</h3>
-                
-                <ol>
-                    <% for(var i=0; i<admins.length; i++){ %>
-                    
-                        <li>Username: <%= admins[i].local.name || admins[i].facebook.name%> <hr></li>
-                    <% } %>
-                </ol>
-                
-            </div> 
+            <% notDeliveredItems++ %>
             
-            <div class="col-xs-12 col-md-4">
-                <h3>List of the Products</h3>
-                
-                <ol>
-                    <% for(var i=0; i<products.length; i++){ %>
+        <% } else { %>
+         
+        <% deliveredItems++ %>
+        
+    <% } %>
+        
+        <% totalSpent = totalSpent + histories[i].bought.total %>
+    <% } %>
+    
+<!--  End of Histories counter  -->
+
+<!-- Calculate the cheapest and most expensive product -->
+    <% var mostExpensive = 0; %>
+    <% var mostExpensiveName; %>
+    <% var cheapest = products[1].price;  %>
+    <% var cheapestName; %>
+    
+    <% for(var i=0; i<products.length; i++){ %>
+        <% if(products[i].price > mostExpensive){ %>
+            
+            <% mostExpensive = products[i].price; %>
+            <% mostExpensiveName = products[i].name; %>
+        <% } %> 
+        <% if(products[i].price < cheapest){ %>
+            
+            <% cheapest = products[i].price; %>
+            <% cheapestName = products[i].name; %>
+        <% } %> 
+    <% } %>
+    
+     
+    
+  
+    
+   
+    <div class="admin container">
+        
+    
+        <div class="admin-row row" style="border-bottom: 1px solid black;">
+        
+            <div class="admin-col col-sm-12 col-md-6" style="border-right: 1px solid black;">
+            
+                <div class="admin-info">
                     
-                        <li>Product: <%= products[i].name %> 
-                            <a class="btn btn-success" href="/view-product/<%= products[i]._id %>"> View Product </a><hr>
-                    </li>
-                    <% } %>
-                </ol>
+                    <div class="admin-image">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Perspective_button_info.png" class="img-fluid rounded">
+                    </div>
+                    <div class="admin-data">
+                        <h3>General Info</h3>
+                        <p><strong>Total money spent on site:</strong> $<%= totalSpent %></p>
+                    </div>
+                    
                 
-            </div>  
+                </div>
+                
+            </div>
+            <div class="admin-col col-sm-12 col-md-6" >
+            
+                <div class="admin-info">
+                    
+                    <div class="admin-image">
+                        <img src="https://checkout.advancedshippingmanager.com/wp-content/uploads/2015/10/Cart-Icon-PNG-Graphic-Cave-e1461785088730-300x300.png" class="img-fluid rounded">
+                    </div>
+                    <div class="admin-data">
+                        <h3>Orders</h3>
+                        <p><strong>Total Number of Orders:</strong> <%= totalItems %></p>
+                        <p><strong>Delivered Orders:</strong> <%= deliveredItems %></p>
+                        <p><strong>Not yet delivered Orders:</strong> <%= notDeliveredItems %></p>
+                        <a href="/orders" class="btn btn-primary">See all orders</a>
+                    </div>
+                    
+                
+                </div>
+                
+            </div>
+        
         </div>
+        <div class="admin-row row">
+        
+            <div class="admin-col col-sm-12 col-md-6" style="border-right: 1px solid black;">
+            
+                <div class="admin-info">
+                    
+                    <div class="admin-image">
+                        <img src="https://icons8.com/iconizer/files/Pretty_Office_part_2/orig/personal-information.png" class="img-fluid rounded">
+                    </div>
+                    <div class="admin-data">
+                    <h3>Users Info</h3>
+                        <p><strong>Total Number of Users:</strong> <%= users.length %></p>
+                        <p><strong>Total Number of Admins:</strong> <%= admins.length %></p>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#users">See all Users</button>
+                    </div>
+                    
+                
+                </div>
+                
+            </div>
+            <div class="admin-col col-sm-12 col-md-6">
+            
+                <div class="admin-info">
+                    
+                    <div class="admin-image">
+                        <img src="http://www.moulikgroup.com/css/images/cuisine.png" class="img-fluid rounded">
+                    </div>
+                    <div class="admin-data">
+                        <h3>Products</h3>
+                        <p><strong>Total Number of Products: </strong> <%= products.length %></p>
+                        <p><strong>The most expensive item: </strong>$<%= mostExpensive %></p>
+                        <p>Name: <%= mostExpensiveName %></p>
+                        <p><strong>The cheapest item: </strong>$<%= cheapest %></p>
+                        <p>Name: <%= cheapestName %></p>
+                        <a href="/add-product" class="btn btn-success">Add New Product</a>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#products">See all Products</button>
+                    </div>
+                    
+     
+                
+                </div>
+                
+            </div>
+        
+        </div>
+    
+    
     </div>
+    
+    
+      <!-- Modal For Users -->
+                <div id="users" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">List of Users</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+    
+                        <div class="modal-body">
+                            <table>
+                                <tr>
+                                
+                                    <th>User Name</th>
+                                    <th>Address</th>
+                                    <th>Edit User</th>
+                                </tr>
+                            <% for(var i=0; i<users.length; i++){ %>
+                                <tr>
+                                
+                                    <td><%= users[i].local.name || users[i].facebook.name %> </td>
+                                    <td><%= users[i].local.address || users[i].facebook.address %> </td>
+                                    <td><a href="/admin/<%= users[i]._id %>" class="btn btn-primary"> Edit User </a>
+                                    
+                                        <% if(users[i].local.isAdmin == true){ %>
+                                        <button class="btn btn-danger">Admin </button>
+                                        <% } %>
+                                    </td>
+                                
+                                </tr>
+                            
+                            <% } %>
+                            
+                            </table>
+               
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                            
+                    </div>
+                  </div>
+                </div>
+    
+    <!-- Modal For Products -->
+                <div id="products" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">List of products</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+    
+                        <div class="modal-body">
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Edit Item</th>
+                                </tr>
+                                
+                                <% for(var i=0; i<products.length; i++){ %>
+                                    <tr>
+                                        <td><%= products[i].name %></td>
+                                        <td>$<%= products[i].price %></td>
+                                        <td><a href="/edit-product/<%= products[i]._id %>" class="btn btn-danger"> Edit Product </a>
+                                        <% if(products[i].isFeatured == true){ %>
+                                            <button class="btn btn-info">Feat.</button>
+                                            <% } %>
+                                            
+                                        </td>
+                                
+                                    </tr>
+                                <% } %>
+                            </table>
+               
+                      </div>
+                      <div class="modal-footer">
+                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    
+   
 
     
-    
+  
     
  <% include partials/footer.ejs %>     
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <script src="/js/custom.js"></script>

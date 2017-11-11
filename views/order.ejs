@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+<title>Buy Tonight</title>
+    
+</head>
+<body>
+ 
+    <div class="fullPage">
+    <% include partials/navbar.ejs %>
+        
+         
+       <div class="container">
+        
+           <div class="row">
+           
+               <div class="col-sm-12 col-md-12 col-lg-4">
+                   
+                   
+                    <h3>User information</h3>
+                   <div class="order-user-info">
+  
+                       <p>Username: <%= user.local.name || user.facebook.name %> </p>
+                       <p>Address: <%= user.local.address || user.facebook.address %> </p>
+                       <p>Telephone: <%= user.local.telephone || user.facebook.telephone %> </p>
+                       <img class="img-fluid rounded" src="<%= user.local.picture || user.facebook.picture %>">
+                   
+                   </div>
+                  
+               
+               
+               </div>
+               
+               <div class="col-sm-12 col-md-12 col-lg-8">
+               
+                   <h3>Order information</h3>
+                   <div class="order-info">
+  
+                       <table>
+                       
+                           <tr>
+                           
+                               <th>Items</th>
+                               <th>Ship to</th>
+                               <th>Quantity</th>
+                               <th>Price</th>
+                               <th>Payment</th>
+                               
+                           
+                           </tr>
+                           
+                           <% for(var i=0; i<order.bought.items.length; i++){ %>
+                           
+                           <tr>
+                               
+                               
+                           
+                               <td><%= order.bought.items[i].name %></td>
+                               <td><%= order.address %></td>
+                               <td><%= order.bought.items[i].quantity %></td>
+                               <% var realPrice = (order.bought.items[i].price/order.bought.items[i].quantity); %>
+                               <td><%= realPrice %></td>
+                               <% if (order.paymentCash == true){ %>
+                                            <td>Cash</td>
+                                            <% } else { %>
+                                            <td>Credit Card</td>
+                                            <% } %>
+                               
+                           </tr>
+                           
+                            
+                            <% } %>
+                           
+                           <tr>
+                           
+                               <th colspan="6">Total to pay: $<%= order.bought.total %> </th>
+                           
+                           </tr>
+                            <tr>
+                               <% if(order.delivered == true){ %> 
+                <% var dayDel = order.dateDelivered.toString(); %>
+                      <% var dejtDel = dayDel.slice(3, 21); %>
+                       
+                       
+                               <th colspan="6">Order is Delivered at: <%= dejtDel %> </th>
+                           <% } %>
+                           </tr>
+                       
+                       </table>
+                       
+                     <% if(order.delivered == false){ %>
+                       <h4>Current status: <span class="currSts"><%= order.status %></span></h4>
+                       
+                       
+                       <form method="post" action="/changeStatus/<%= order._id %>">
+                        
+                         <input style="color: red;" id="1one" type="radio" name="status" value="orderAccepted"> Order Accepted <br><hr>
+                         <input id="1two" type="radio" name="status" value="buying"> Buying in Progress <br><hr>
+                         <input id="1tree"  type="radio" name="status" value="onway"> Shipping to Address <br><hr>
+                         <input id="1four"  type="radio" name="status" value="delivered"> Order Delivered <br><hr>
+                           
+                           
+                        <button type="submit" class="btn btn-success">Update</button>
+                       
+                       </form>
+                       
+                       <% } %>
+                      
+                       
+                   
+                   
+                   </div>
+               
+               
+               </div>
+           
+           </div>
+        
+        </div>
+    
+       
+         
+                        
+        
+
+    
+ <% include partials/footer.ejs %>     
+  </div>  
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script src="/js/custom.js"></script>
+
+</body>
+
+</html>

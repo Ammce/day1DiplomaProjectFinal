@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/custom.css">
@@ -16,29 +17,73 @@
     
         <div class="row">
         
-            <div class="col-xs-8 offset-xs-2">
-                <h1>Specify products you want to search!</h1>
+            <div class="col-sm-12">
+               
                 <form action="/products/specify" method="get">
                    
-                     <div class="form-check" style="border: 1px dotted black; padding: 5px;" >
-                    <h4>Category</h4>
-                        <label class="form-check-label">
-                            <input name="category" class="form-check-input" type="checkbox" value="SmartPhones"> SmartPhones
-                        </label>
-                        <label class="form-check-label">
-                            <input name="category" class="form-check-input" type="checkbox" value="Food"> Food
-                        </label>
-                         <label class="form-check-label">
-                            <input name="category" class="form-check-input" type="checkbox" value="Monitors"> Monitors
-                        </label>
+                   
                     
+                     <div class="form-check"  style="border: 2px solid #ddd; padding: 5px;" >
+                         <div class="products-filter" id="filter-store">
+                             <h4>Store</h4>
+                             
+                             <ul>
+                                 
+                                 <li><input name="store" value="Rolex" type="checkbox" id="cb2" />
+                                <label for="cb2"><img src="http://www.retailserbia.com/images/slike5/kam-market-diambe-1.jpg" /><p>Kam Market</p></label>
+                              </li>
+                                 <li><input name="store" value="Furna" type="checkbox" id="cb3" />
+                                <label for="cb3"><img src="http://mkmaps.com/wp-content/uploads/2013/11/Gradska-Kafana-FURNA-Skopje-Macedonia-MKmaps.jpg" /><p>Furna</p></label>
+                              </li>
+                                 <li><input name="store" value="Hamza Doner" type="checkbox" id="cb4" />
+                                <label for="cb4"><img src="https://s.rozee.pk/company_logos/72/96351922630898.png" /><p>Hamza Doner</p></label>
+                              </li>
+                                 <li><input name="store" value="AMC" type="checkbox" id="cb1" />
+                                <label for="cb1"><img src="http://skopjecitymall.mk/wp-content/uploads/2015/01/2hs8zsg1.jpg" /><p>AMC</p></label>
+                              </li>
+                                 <li><input name="store" value="JYSK" type="checkbox" id="cb5" />
+                                <label for="cb5"><img src="https://cdn.jysk.ca/media/wysiwyg/logo.jpg" /><p>JYSK</p></label>
+                              </li>
+                                 <li><input name="store" value="Other" type="checkbox" id="cb6" />
+                                <label for="cb6"><img src="http://other.co.uk/system/wp-content/uploads/2016/10/other-logo.jpg" /><p>Other</p></label>
+                              </li>
+                         
+                            </ul>
+                             
+                         </div>
+                         
+                         <div class="products-filter" id="filter-category">
+                    <h4>Category</h4>
+                       <ul>
+                            
+                            <li><input name="category" value="Food" type="checkbox" id="cb7" />
+                                <label for="cb7"><img src="http://4vector.com/i/free-vector-hamburger-clip-art_113002_Hamburger_clip_art_hight.png" /><p>Food</p></label>
+                              </li>
+                                <li><input name="category" value="Drinks" type="checkbox" id="cb8" />
+                                <label for="cb8"><img src="https://seeklogo.com/images/O/orange-drinks-logo-26A932A99B-seeklogo.com.png" /><p>Drinks</p></label>
+                              </li>
+                                <li><input name="category" value="Grocery" type="checkbox" id="cb11" />
+                                <label for="cb11"><img src="http://www.grocery-tracker.com/gtracker_icon.png" /><p>Grocery</p></label>
+                              </li>
+                                <li><input name="category" value="Electronics" type="checkbox" id="cb9" />
+                                <label for="cb9"><img src="http://eatlogos.com/fashion_logos/png/vector_mobile_logo.png" /><p>Electronics</p></label>
+                              </li>
+                                <li><input name="category" value="Home" type="checkbox" id="cb10" />
+                                <label for="cb10"><img src="http://images.clipartpanda.com/home-sweet-home-logo-sweet_home_coloring_book_colouring-555px.png" /><p>Home</p></label>
+                              </li>
+                             
+                        </ul>
+                   
+                         </div>
                     </div>
                     
-                    <div class="form-check" style="border: 1px dotted black; padding: 5px;" >
+                    <div class="form-check" style="border: 2px solid #ddd; padding: 5px;" >
                     <h4>Price</h4>
-                        <div class="form-group">
-                        <label for="price">Price of product:</label>
-                        <input type="text" class="form-control" name="price">
+                         <div class="priceFromTo form-group">
+                        <label for="price">Price From:</label>
+                        <input type="number" class="form-control" name="priceFrom">
+                        <label for="price">Price To:</label>
+                        <input type="text" class="form-control" name="priceTo">
                         </div>
     
                     
@@ -50,6 +95,7 @@
                 </form>
                 
                 
+                
             </div>
         
         
@@ -58,44 +104,41 @@
     
     </div>
     
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">   
-                <h1>Here are the products you have just addedS</h1>
-              </div>          
-                <% items.forEach(function(item){ %>   
-                    <% if(item){ %>
-                    <div class="col-xs-12 col-md-3">
-                        <div class="card">
-                            <img class="card-img-top product-pics" src="<%= item.image %>" alt="Card image cap">
-                        <div class="card-block">
-                            <h4 class="card-title"><%= item.name %> </h4>
-                            <p class="card-text">Description: <%= item.description %></p>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Price: <%= item.price %></li>
-                            <li class="list-group-item">Category: <%= item.category %></li>
-                        </ul>
-                        <div class="card-block">
-                            <a href="/view-product/<%= item._id %>" class="btn btn-success">Buy This</a>
-                        </div>
-                        
-                        </div>
-                    </div>
-                        
-                    <% return true; } %>
-            
-                    <% if(item === undefined) { %>
-                    <h1>The item you are looking for is not found...</h1>
+  <div class="container">
+                <div class="row">
                     
-                    <% } %>
+                <% items.forEach(function(item){ %>
+                <div class="product-card-col col-sm-12 col-md-3">
+                    <a href="/view-product/<%= item._id %>">
+                   <div class="product-card">
+    
+                        <img src="<%= item.image %>" class="img-fluid rounded">
+                        <div class="product-card-infos">
+                            <h5><%= item.name %> </h5>
+                            <h2>$<%= item.price %> </h2>
+                                <% if(item.price > 500){ %>
+                            <span class="product-card-price">
+                                Expensive item
+                            </span>
+                                <% } %>
+                       </div>
+                    </div>
+                    </a>
+                    </div>
                 <% }) %>   
-
-        </div>
-    </div>    
+                    </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                        <p>1 2 3 4 5</p>
+                      </div>
+                  </div>
+                </div> 
  <% include partials/footer.ejs %>     
 
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <script src="/js/custom.js"></script>

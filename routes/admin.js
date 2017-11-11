@@ -2,7 +2,9 @@ var router = require('express').Router();
 var User = require('../models/user');
 var Product = require('../models/products');
 var History = require('../models/history');
+var Cart = require('../models/cart');
 var cors = require('cors');
+var mongoose = require('mongoose');
 var corsOptions = {
     origin: "http://localhost:3000",
     optionSuccessStatus: 200
@@ -62,13 +64,28 @@ function findProducts(req, res, next){
     });
 }
 
+function findHistories(req, res, next){
+    History.find({}, function(err, histories){
+        if(err){
+            return next(err);
+        }
+        else{
+            req.histories = histories;
+            next();
+        }
+    });
+}
+
+
+
+
 
 function renderAdminPage(req, res){
     
     
      if(req.user){
         if(req.user.local.isAdmin){
-          res.render('admin', {users: req.users, products: req.products, admins: req.admins});
+          res.render('admin', {users: req.users, products: req.products, admins: req.admins, histories: req.histories});
             
         }
         else {
@@ -80,7 +97,7 @@ function renderAdminPage(req, res){
     }
 }
 
-router.get('/admin', cors(corsOptions), findUsers, findAdmins, findProducts, renderAdminPage);
+router.get('/admin', cors(corsOptions), findUsers, findAdmins, findProducts, findHistories, renderAdminPage);
 
 
 
@@ -105,24 +122,27 @@ router.get('/products', function(req, res, next){
       
 });
 
-router.post('/chargeCash', function(req, res, next){
-    
-    var history = new History();
-    history.buyer = req.user._id;
-    history.shop = req.body.cartID;
-    
-    history.save(function(err){
+
+router.get('/test', function(req, res, next){
+    /*User.find({}).where('local.name').equals('Amel Muminovic').sort('-address').exec(function(err, user){
         if(err){
             return next(err);
         }
         else{
-            res.redirect("/profile");
-            console.log(history);
+            res.json(user);
+        }
+    }); */
+    
+    Product.find({store: 'rolex'}, function(err, items){
+        if(err){
+            return next(err);
+        }
+        else{
+            console.log(items);
         }
     });
-    
-    
 });
+
 
 
 router.get('/add-product', cors(corsOptions), function(req, res, next){
@@ -149,6 +169,7 @@ router.post('/add-product' ,cors(corsOptions), function(req, res, next){
     product.price = req.body.price;
     product.category = req.body.category;
     product.image = req.body.image;
+    product.store = req.body.store;
     
     product.save(function(err, product){
         if(err){
@@ -164,11 +185,106 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
     
  var options = {
      price: req.query.price,
-     category: req.query.category
+     category: req.query.category,
+     store: req.query.store
+     
  };
+    
+  
+    
+    if(req.query.category !== undefined && req.query.store !== undefined){
 
-    if(options.price !== '' && options.category !== undefined){
-         Product.find({$and:[{'price': req.query.price}, {'category': req.query.category}]}, function(err, product){
+    Product.find({$and: [{category: req.query.category}, {store: req.query.store}]}, function(err, products){
+        if(err){
+            return next(err);
+        }
+        else{
+          res.render('specify', {items: products});  
+        }
+    });
+        }
+   else if(req.query.category !== undefined || req.query.store !== undefined){
+
+    Product.find({$or: [{category: req.query.category}, {store: req.query.store}]}, function(err, products){
+        if(err){
+            return next(err);
+        }
+        else{
+          res.render('specify', {items: products});  
+        }
+    });
+        }
+    else{
+        res.redirect('/products');
+    } 
+    
+/*    
+
+Product.find({}).where("category").equals(req.query.category).exec(function(err, products){
+    if(err){
+        return next(err);
+    }
+    else{
+      res.render('specify', {items: products});
+      
+    }
+    
+});
+*/
+/*    
+    
+Product.find({}).where("store").equals(req.query.store).exec(function(err, products){
+    if(err){
+        return next(err);
+    }
+    else{
+      res.render('specify', {items: products});
+      
+    }
+    
+});
+
+*/
+
+/* Working for PRICE    
+if(req.query.priceFrom !== '' && req.query.priceTo !== ''){
+  Product.find({$and:[{price: { $gt: req.query.priceFrom }}, {price: { $lt: req.query.priceTo }}]}, function(err, products){
+      if(err){
+          return next(err);
+      }
+      else{
+          next();
+          console.log(products);
+          console.log(req.query.category);
+      }
+  });  
+  }
+else if(req.query.priceFrom == ''){
+  Product.find({price: {$lt: req.query.priceTo}}, function(err, products){
+      if(err){
+          return next(err);
+      }
+      else{
+          next();
+          console.log(products);
+      }
+  });  
+  }
+else if(req.query.priceTo == ''){
+  Product.find({price: {$gt: req.query.priceFrom}}, function(err, products){
+      if(err){
+          return next(err);
+      }
+      else{
+          next();
+          console.log(products);
+      }
+  });  
+  } */
+      
+ /*
+    if(options.price !== '' && options.category !== undefined && options.store !== undefined){
+         Product.find({$and:[{'price': req.query.price}, {'category': req.query.category}, {'store': req.query.store}]}, function(err, product){
      if(err){ return next(err);
             }
         else{    
@@ -177,8 +293,8 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
         } 
     }); 
     }
-    else if(options.price !== '' || options.category !== undefined){
-         Product.find({$or:[{'price': req.query.price}, {'category': req.query.category}]}, function(err, product){
+    else if(options.price !== '' || options.category !== undefined || options.store !== undefined){
+         Product.find({$or:[{'price': req.query.price}, {'category': req.query.category}, {'store': req.query.store}]}, function(err, product){
      if(err){ return next(err);
             }
         else{    
@@ -198,7 +314,7 @@ router.get('/products/specify',cors(corsOptions), function(req, res, next){
     }); 
         
 
-    }
+    } */
 });
   
 
@@ -244,7 +360,9 @@ if(req.user){
                 description: req.body.description,
                 price: req.body.price,
                 category: req.body.category,
-                isFeatured: req.body.isFeatured
+                isFeatured: req.body.isFeatured,
+                store: req.body.store,
+                image: req.body.image
             });
         
         product.save(function(err){
@@ -362,7 +480,141 @@ router.post('/admin/:profile_id', function(req, res, next){
 });
 
 
+function findOrders(req, res, next){
+    History.find({}, function(err, histories){
+        if(err){
+            return next(err);
+        }
+        else{
+           req.histories = histories;
+            next();
+        }
+    });
+}
 
+router.get('/orders', findOrders, function(req, res, next){
+    
+    if(req.user){
+        if(req.user.local.isAdmin || req.user.facebook.isAdmin){
+            
+            res.render('orders', { histories: req.histories});
+            
+        }
+        else{
+            res.redirect('/');
+        }
+    }
+    else{
+        res.redirect('/');
+    }
+    
+});
+
+
+router.get('/order/:order_id', function(req, res, next){
+    
+    var user1;
+    
+    History.findOne({_id: req.params.order_id}, function(err, order){
+        if(err){
+            return next(err);
+        }
+        else{
+           
+            req.order = order;
+            User.findOne({_id: order.customer}, function(err, user){
+                if(err){
+                    return next(err);
+                }
+                else{
+                   
+                    res.render('order', {order: req.order, user: user});
+                    
+                }
+            });
+            
+        }
+    });
+});
+
+router.post('/changeStatus/:order_id', function(req, res, next){
+    History.findOne({_id: req.params.order_id}, function(err, order){
+        if(err){
+            return next(err);
+        }
+        else{
+            if(req.body.status == 'buying'){
+                order.status = "Buying in progress";
+                order.delivered = false;
+            }
+            else if(req.body.status == 'orderAccepted'){
+                order.status = "Order Accepted";
+                order.delivered = false;
+            }
+            else if(req.body.status == 'onway'){
+                order.status = "Shipping to Address";
+                order.delivered = false;
+            }
+            else if(req.body.status == 'delivered'){
+                order.status = "Order Delivered";
+                order.delivered = true;
+                order.dateDelivered = Date.now();
+                
+            }
+            
+            order.save(function(err){
+                if(err){
+                    return next(err);
+                }
+                else{
+                    if(req.body.status == 'delivered'){
+                        res.redirect('/orders');
+                    }
+                    else{
+                        res.redirect('/order/' + req.params.order_id);
+                    }
+                }
+            });
+        }
+        
+    });
+});
+
+router.post("/searchOrder", isAdm, function(req, res, next){
+    
+    if(mongoose.Types.ObjectId.isValid(req.body.searchOrder)){
+    History.findOne({_id: req.body.searchOrder}, function(err, order){
+        if(err){
+            return next(err);
+        }
+        else{
+            if(order.address.length>0){
+                res.redirect("/order/" + order._id);
+            }
+            else{
+                res.redirect('/products');
+            }
+        }
+    });
+        }
+    else{
+        res.redirect('/orders');
+    }
+});
+
+function isAdm(req, res, next){
+    if(req.user){
+        if(req.user.local.isAdmin){
+            next();
+        }
+        else{
+            res.redirect('/profile');
+        }
+    }
+    else{
+        res.redirect('/login');
+    }
+}
 
 
 module.exports = router;
