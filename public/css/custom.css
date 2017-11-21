@@ -681,8 +681,28 @@ display: none;
 .th-custom{
     background-color: #292b2c;
     color: rgba(255,255,255,.7);
-    text-align: center;
+   
 }
+
+/*Validator jQuery*/
+#name-error, #email-error, #password-error, address-error {
+    color: red;
+    border: none;
+    padding: 0;
+    margin: 10px;
+    cursor: auto;
+}
+
+.custom-label{
+    cursor: auto;
+    margin: 0;
+    padding-left: 0;
+    border: none;
+}
+
+
+
+/* */
 
 /************************************/
 /* MEDIA QUERIES */

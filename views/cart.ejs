@@ -17,7 +17,10 @@
     <% if (messages.length > 0) { %>
             <div class="alert alert-success" style="text-align: center"><%= messages %></div>
     <% } %>
+
     
+    
+
     <div class="container">
         <div class="row">
         <div class="cont-shop-class col-sm-12">
@@ -68,6 +71,7 @@
                      <h5> Subtotal: <strong class="float-right"> $<%= cart.total %></strong></h5>
                     <h5> Discount: <strong class="float-right">$0</strong></h5>
                     <h5> Total: <strong class="float-right">$<%= cart.total %></strong></h5>
+                    <input type="hidden" value="<%= cart.total %>" class="totalForFor">
                     
                 </div>
                 
@@ -153,6 +157,7 @@
   crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.js"></script>
 <script src="/js/custom.js"></script>
 
 </body>

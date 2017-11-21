@@ -78,18 +78,7 @@
                          </div>
                     </div>
                     
-                    <div class="form-check" style="border: 2px solid #ddd; padding: 5px;" >
-                    <h4>Price</h4>
-                         <div class="priceFromTo form-group">
-                        <label for="price">Price From:</label>
-                        <input type="text" class="form-control" name="priceFrom">
-                        <label for="price">Price To:</label>
-                        <input type="text" class="form-control" name="priceTo">
-                        </div>
-    
-                    
-                    </div>
-                    
+          
                     <button type="submit" class="btn btn-success">Update Search</button>
                 
                 
@@ -106,8 +95,8 @@
     </div>
     
   <div class="container">
-                <div class="row">
-                    
+       <div class="row">
+            <% if(items.length > 0) { %>
                 <% items.forEach(function(item){ %>
                 <div class="product-card-col col-sm-12 col-md-3">
                     <a href="/view-product/<%= item._id %>">
@@ -126,14 +115,17 @@
                     </div>
                     </a>
                     </div>
-                <% }) %>   
+                <% })} else{ %>
+               
                     </div>
                   <div class="row">
                     <div class="col-sm-12">
-                        <p>1 2 3 4 5</p>
+                        <h3 style="text-align: center;">No items found</h3>
                       </div>
                   </div>
+                    <% } %>
                 </div> 
+     </div>
  <% include partials/footer.ejs %>     
 
 <script
@@ -142,6 +134,7 @@
   crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.js"></script>
 <script src="/js/custom.js"></script>
 
 </body>

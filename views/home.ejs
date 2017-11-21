@@ -333,20 +333,20 @@
                 <div class="row">
                
                     <div class="contact-mob-half col-sm-12 col-md-6">
-                     <form method="post" action="/contact">
+                     <form class="registerForm" method="post" action="/contact">
                     
                         <div class="form-group">
-                                <label for="Name">Name</label>
-                                <input type="text" class="form-control" name="name">
+                                <label class="custom-label" for="Name">Name</label>
+                                <input type="text" class="form-control" name="name" required>
                         </div>
                         <div class="form-group">
-                                <label for="Email">E-mail</label>
-                                <input type="text" class="form-control" name="email">
+                                <label class="custom-label" for="Email">E-mail</label>
+                                <input type="email" class="form-control" name="email" required>
                         </div>
                    
                         <div class="form-group">
-                                <label for="MSG">Your Message</label>
-                            <textarea class="form-control" name="message"></textarea>
+                                <label class="custom-label" for="MSG">Your Message</label>
+                            <textarea class="form-control" name="message" required></textarea>
                         </div>
                          <button type="submit" class="btn btn-success">Send</button>
                         </form>
@@ -375,6 +375,7 @@
   crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.js"></script>
 <script src="/js/custom.js"></script>
 
 </body>

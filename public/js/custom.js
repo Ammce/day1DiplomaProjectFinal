@@ -45,19 +45,24 @@ $(document).ready(function(){
     
         
     $("#payWithCard").click(function(){
-        $('.cashPayment').fadeOut(300, "swing", function(){
+        var total = $(".totalForFor").val();
+        
+        if(total != 0){
+            $('.cashPayment').fadeOut(300, "swing", function(){
             $(".cardPayment").fadeIn("fast");
         });
-
+        }
     });
     
      $("#payWithCash").click(function(){
         
-       
+       var total = $(".totalForFor").val();
+        
+        if(total != 0){
         $('.cardPayment').fadeOut(300, "swing", function(){
              $(".cashPayment").fadeIn("fast");
         } );
-    
+        }
     });
     
     $("#nav-about").click(function(e) {
@@ -97,7 +102,9 @@ $(document).ready(function(){
         }
       
    
+        //Validation of forms
     
+        $(".registerForm").validate();
    
  
        

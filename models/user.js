@@ -8,7 +8,7 @@ var userSchema = new Schema({
         password: String,
         name: String,
         address: String, 
-        picture: {type: String, default: ''},
+        picture: {type: String, default: 'http://pngimages.net/sites/default/files/user-png-image-15189.png'},
         isAdmin: {type: Boolean, default: false}
         
     },
@@ -19,7 +19,7 @@ var userSchema = new Schema({
         address      : String,
         email        : String,
         name         : String,
-        picture: {type: String, default: ''},
+        picture: {type: String, default: 'http://pngimages.net/sites/default/files/user-png-image-15189.png'},
         isAdmin: {type: Boolean, default: false}
         
     }
